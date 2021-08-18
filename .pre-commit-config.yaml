@@ -1,0 +1,32 @@
+# See https://pre-commit.com/ for usage and config
+repos:
+- repo: local
+  hooks:
+
+  - id: check-added-large-files
+    name: Check for added large files
+    stages: [commit]
+    entry: check-added-large-files
+    language: system
+
+  - id: isort
+    name: isort
+    stages: [commit]
+    language: system
+    entry: poetry run isort src
+    types: [python]
+
+  - id: black
+    name: black
+    stages: [commit]
+    language: system
+    entry: poetry run black src
+    types: [python]
+
+  - id: pytest
+    name: pytest
+    stages: [commit]
+    language: system
+    entry: poetry run pytest tests
+    types: [python]
+    pass_filenames: false

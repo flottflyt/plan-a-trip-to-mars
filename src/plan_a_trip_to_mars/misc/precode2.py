@@ -21,7 +21,8 @@ function.
 
 """
 
-from math import hypot, cos, sin, radians
+from math import cos, hypot, radians, sin
+
 import pygame
 
 
@@ -36,7 +37,7 @@ class ReturnZero(ZeroDivisionError):
         super().__init__(message)
 
 
-class Vector2D():
+class Vector2D:
     """Implements a two dimensional vector.
 
     :param x: First component for the vector.
@@ -48,10 +49,12 @@ class Vector2D():
         self.y = y
 
     def __repr__(self):
-        return 'Vector2D({vec.x}, {vec.y})'.format(vec=self)
+        return "Vector2D({vec.x}, {vec.y})".format(vec=self)
 
     def __str__(self):
-        return 'Vector(X: {vec.x}, Y: {vec.y}) Magnitude: {lng}'.format(vec=self, lng=abs(self))
+        return "Vector(X: {vec.x}, Y: {vec.y}) Magnitude: {lng}".format(
+            vec=self, lng=abs(self)
+        )
 
     def __nonzero__(self):
         """Make Vector2D(0,0) evaluate to False, all other vectors evaluate to True.
@@ -93,8 +96,7 @@ class Vector2D():
             b = float(b)
             return Vector2D(self.x * b, self.y * b)
         except ValueError:
-            raise ValueError(
-                "Right value must be castable to float, was {}".format(b))
+            raise ValueError("Right value must be castable to float, was {}".format(b))
 
     def __truediv__(self, b):
         """Vector division by a scalar.
@@ -106,8 +108,7 @@ class Vector2D():
             b = float(b)
             return Vector2D(self.x / b, self.y / b)
         except ValueError:
-            raise ValueError(
-                "Right value must be castable to float, was {}".format(b))
+            raise ValueError("Right value must be castable to float, was {}".format(b))
 
     def __iter__(self):
         """Generator function used to iterate over components of vector.
@@ -122,8 +123,7 @@ class Vector2D():
             b = float(b)
             return Vector2D(self.x * b, self.y * b)
         except (ValueError, ZeroDivisionError):
-            raise ValueError(
-                "Scalar must be castable to float, was {}".format(b))
+            raise ValueError("Scalar must be castable to float, was {}".format(b))
 
     def __abs__(self):
         """Return the magnitude of the vector."""
@@ -140,7 +140,8 @@ class Vector2D():
             return self / m
         except ZeroDivisionError as e:
             raise ReturnZero(
-                "Attempted to normalize a zero vector, return a unit vector at zero degrees") from e
+                "Attempted to normalize a zero vector, return a unit vector at zero degrees"
+            ) from e
 
     def copy(self):
         """Return a copy of the vector.
@@ -169,7 +170,9 @@ class Vector2D():
         return Vector2D(newx, newy)
 
 
-def intersect_rectangle_circle(rec_pos, sx, sy, circle_pos, circle_radius, circle_speed):
+def intersect_rectangle_circle(
+    rec_pos, sx, sy, circle_pos, circle_radius, circle_speed
+):
     """Determine if a rectangle and a circle intersects.
 
     Only works for a rectangle aligned with the axes.
@@ -271,40 +274,46 @@ def example_code():
             if event.type == pygame.QUIT:
                 exit()
 
-        pygame.draw.rect(screen, (0, 0, 0),
-                         (0, 0, screen.get_width(), screen.get_height()))
+        pygame.draw.rect(
+            screen, (0, 0, 0), (0, 0, screen.get_width(), screen.get_height())
+        )
         time_passed = clock.tick(30)  # limit to 30FPS
         time_passed_seconds = time_passed / 1000.0  # convert to seconds
 
         x, y = pygame.mouse.get_pos()
         a_pos = Vector2D(x, y)
 
-        pygame.draw.rect(screen, (255, 255, 255),
-                         (ra_pos.x, ra_pos.y, ra_sx, ra_sy))
-        pygame.draw.rect(screen, (255, 255, 255),
-                         (rb_pos.x, rb_pos.y, rb_sx, rb_sy))
-        pygame.draw.circle(screen, (255, 255, 255),
-                           (b_pos.x, b_pos.y), b_radius)  # other circle
-        pygame.draw.circle(screen, (255, 0, 0),
-                           (a_pos.x, a_pos.y), a_radius)  # mouse
+        pygame.draw.rect(screen, (255, 255, 255), (ra_pos.x, ra_pos.y, ra_sx, ra_sy))
+        pygame.draw.rect(screen, (255, 255, 255), (rb_pos.x, rb_pos.y, rb_sx, rb_sy))
+        pygame.draw.circle(
+            screen, (255, 255, 255), (b_pos.x, b_pos.y), b_radius
+        )  # other circle
+        pygame.draw.circle(screen, (255, 0, 0), (a_pos.x, a_pos.y), a_radius)  # mouse
 
         def draw_vec_from_ball(vec, col):
             """Draw a vector from the mouse controlled circle."""
-            pygame.draw.line(screen, col, (a_pos.x, a_pos.y),
-                             (a_pos.x + vec.x * 20, a_pos.y + vec.y * 20), 3)
+            pygame.draw.line(
+                screen,
+                col,
+                (a_pos.x, a_pos.y),
+                (a_pos.x + vec.x * 20, a_pos.y + vec.y * 20),
+                3,
+            )
 
         # Draw speed vector
         draw_vec_from_ball(a_speed, (255, 255, 0))
 
         # The big rectangle
         impulse = intersect_rectangle_circle(
-            ra_pos, ra_sx, ra_sy, a_pos, a_radius, a_speed)
+            ra_pos, ra_sx, ra_sy, a_pos, a_radius, a_speed
+        )
         if impulse:
             draw_vec_from_ball(impulse, (0, 255, 255))
 
         # The small rectangle
         impulse = intersect_rectangle_circle(
-            rb_pos, rb_sx, rb_sy, a_pos, a_radius, a_speed)
+            rb_pos, rb_sx, rb_sy, a_pos, a_radius, a_speed
+        )
         if impulse:
             draw_vec_from_ball(impulse, (0, 255, 255))
 
@@ -325,5 +334,5 @@ def example2():
     print(V3)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     example_code()

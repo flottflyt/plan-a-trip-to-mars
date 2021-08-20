@@ -9,7 +9,7 @@ license = "MIT"
 plan-a-trip-to-mars = "plan_a_trip_to_mars.__main__:main"
 
 [tool.poetry.dependencies]
-python = ">=3.9,<3.11"
+python = ">=3.7,<3.11"
 astropy = "^4.3.1"
 matplotlib = "^3.4.3"
 numpy = "^1.21.2"

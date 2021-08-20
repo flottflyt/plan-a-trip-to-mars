@@ -64,9 +64,13 @@ class Sim:
             # thay are at the same place in their orbits. This will trigger more than once
             # per passage, but it does the job.
             if abs(e_angle - m_angle) < 1:
-                print(f"Aligned at {time = }")
+                print(f"Aligned at time = {time}")
+                # Nice syntax in python >=3.9
+                # print(f"Aligned at {time = }")
             if abs(180 - e_angle + m_angle) < 1:
-                print(f"Opposite of each other at {time = }")
+                print(f"Opposite of each other at time = {time}")
+                # Nice syntax in python >=3.9
+                # print(f"Opposite of each other at {time = }")
 
             # Add check to see if the rocket is close to Mars ...
 

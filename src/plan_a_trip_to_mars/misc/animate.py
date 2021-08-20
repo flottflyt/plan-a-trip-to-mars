@@ -16,6 +16,7 @@ class AnimatedScatter(object):
     """An animated scatter plot using matplotlib.animations.FuncAnimation."""
 
     def __init__(self, args):
+        self.show_trace = False
         self.numpoints = len(args)
         self.points = args
         self.names = [obj.name for obj in self.points]
@@ -39,8 +40,9 @@ class AnimatedScatter(object):
             x, y, c=c, s=s, vmin=0, vmax=1, cmap="jet", edgecolor="w"
         )
         # Draw their trace
-        for j, (x_, y_) in enumerate(zip(x, y)):
-            setattr(self, f"line_{j}", self.ax.plot(x_, y_)[0])
+        if self.show_trace:
+            for j, (x_, y_) in enumerate(zip(x, y)):
+                setattr(self, f"line_{j}", self.ax.plot(x_, y_)[0])
 
         # Add text that display the simulation time
         self.txt = [
@@ -67,8 +69,9 @@ class AnimatedScatter(object):
         # For FuncAnimation's sake, we need to return the artist we'll be using
         # Note that it expects a sequence of artists, thus the trailing comma.
         returns = [self.scat]
-        for j in range(len(x)):
-            returns.append(getattr(self, f"line_{j}"))
+        if self.show_trace:
+            for j in range(len(x)):
+                returns.append(getattr(self, f"line_{j}"))
         return returns + self.txt
 
     def prepeare_data(self):
@@ -101,12 +104,13 @@ class AnimatedScatter(object):
         self.scat.set_array(data[:, 3])
 
         # Draw traces ...
-        for j, obj in enumerate(self.points):
-            xs = [x[0] for x in obj.trace[: i + 1]]
-            ys = [y[1] for y in obj.trace[: i + 1]]
-            line = getattr(self, f"line_{j}")
-            line.set_xdata(xs)
-            line.set_ydata(ys)
+        if self.show_trace:
+            for j, obj in enumerate(self.points):
+                xs = [x[0] for x in obj.trace[: i + 1]]
+                ys = [y[1] for y in obj.trace[: i + 1]]
+                line = getattr(self, f"line_{j}")
+                line.set_xdata(xs)
+                line.set_ydata(ys)
 
         # Set text position and update simulation time ...
         for txt, x, y in zip(self.txt[1:], data[:, 0], data[:, 1]):
@@ -118,8 +122,9 @@ class AnimatedScatter(object):
         # would add a trailing comma:
         # return [self.scat,]
         returns = [self.scat]
-        for j in range(len(self.points)):
-            returns.append(getattr(self, f"line_{j}"))
+        if self.show_trace:
+            for j in range(len(self.points)):
+                returns.append(getattr(self, f"line_{j}"))
         return returns + self.txt
 
 

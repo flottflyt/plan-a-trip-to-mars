@@ -25,7 +25,7 @@ class Sim:
             pos=pre.Vector2D(cf.D_earth, 0),
             vel=pre.Vector2D(0, cf.V_earth),
         )
-        mars_angle = 100
+        mars_angle = 47
         mars = uni.Planet(
             "Mars",
             cf.M_mars,
@@ -37,11 +37,11 @@ class Sim:
         mars_shuttle = uni.Rocket(
             "Go!",
             1e4,
-            pos=pre.Vector2D(cf.D_earth, 10 * cf.R_earth),
-            vel=pre.Vector2D(0, 6e3 + cf.V_earth),
+            pos=pre.Vector2D(cf.D_earth, 20 * cf.R_earth),
+            vel=pre.Vector2D(0, 5.5e3 + cf.V_earth),
         )
 
-        # mars_shuttle.add_kick_event(0, 1e4, 20)
+        mars_shuttle.add_kick_event(0, cf.V_mars, 250)
         # mars_shuttle.add_kick_event(-90, 1e5, 1000)
         # mars_shuttle.add_kick_event(-180, 5e4, 100)
 
@@ -70,7 +70,8 @@ class Sim:
 
             # Add check to see if the rocket is close to Mars ...
 
-        _ = ani.AnimatedScatter(self.my_uni.objects)
+        a = ani.AnimatedScatter(self.my_uni.objects)
+        a.show_trace = True
         plt.show()
 
 

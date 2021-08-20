@@ -5,8 +5,6 @@ import bisect
 from abc import ABC, abstractmethod
 from typing import Union
 
-import matplotlib.pyplot as plt
-
 import plan_a_trip_to_mars.config as cf
 import plan_a_trip_to_mars.misc.precode2 as pre
 

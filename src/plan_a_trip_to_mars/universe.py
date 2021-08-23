@@ -2,26 +2,17 @@
 """
 
 import bisect
-from abc import ABC, abstractmethod, abstractproperty
+from abc import ABC, abstractmethod
 from typing import Union
 
-import plan_a_trip_to_mars.config as cf
 import plan_a_trip_to_mars.misc.precode2 as pre
+
+# Gravitational constant
+G = 6.6743e-11
 
 
 class Base(ABC):
     """Abstract baseclass for every stationary object to inherit from."""
-
-    # @abstractproperty
-    # def spi(self) -> int:
-    #     """The simulation time.
-
-    #     spi stand for seconds per iteration, so a value of 1000 means that the simulation is
-    #     speed up by one thousand compared to default. All physical constants and dynamics
-    #     is implemented with SI units, hence each step in the simulation loop will by
-    #     default simulate one second.
-    #     """
-    #     raise NotImplementedError
 
     def __init__(
         self,
@@ -175,6 +166,6 @@ class Universe:
         net_force = pre.Vector2D(0, 0)
         for o in [y for y in self.objects if y is not obj]:
             distance_vec = o.pos - obj.pos
-            gravityForce = cf.G * (obj.mass * o.mass) / (abs(distance_vec) ** 2)
+            gravityForce = G * (obj.mass * o.mass) / (abs(distance_vec) ** 2)
             net_force += gravityForce * distance_vec.normalized()
         obj.acc = net_force / obj.mass

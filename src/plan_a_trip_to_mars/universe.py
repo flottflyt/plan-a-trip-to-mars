@@ -130,10 +130,7 @@ class Universe:
 
     def move(self, time):
         # Make a copy so we can update based on a snapshot in time
-        force_list = []
-        force_list_app = force_list.append
         for obj in self.objects:
-            # force_list_app(self.calculate_force(obj))
             self.calculate_force(obj)
 
         # Let us now update the movement of each object with the gravitational pull it

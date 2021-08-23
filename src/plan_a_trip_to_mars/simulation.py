@@ -13,10 +13,12 @@ import plan_a_trip_to_mars.universe as uni
 
 class Sim:
     def __init__(self) -> None:
-        """Initialise what ever we want to use to view the simulation."""
+        """Initialise the simulation setup."""
         self.create_complete_universe()
 
     def create_complete_universe(self) -> None:
+        """Implement the objects and events of our universe."""
+
         # Create the Sun, Earth and Mars
         sun = uni.Planet("Sun", cf.M_sun)
         earth = uni.Planet(
@@ -41,15 +43,24 @@ class Sim:
             vel=pre.Vector2D(0, 4.8e3 + cf.V_earth),
         )
 
-        mars_shuttle.add_kick_event(0, cf.V_mars, 250 * 24)
+        mars_shuttle.add_kick_event(0, 2.6e3, 250 * 24)
+        # mars_shuttle.add_kick_event(0, cf.V_mars, 250 * 24)
         # mars_shuttle.add_kick_event(0, cf.V_mars, 250)
 
+        # Create the universe all objects should live in
         self.my_uni = uni.Universe()
         self.my_uni.add_object(sun, earth, mars, mars_shuttle)
         self.my_uni.set_spi(3600)
         self.my_uni.ready()
 
-    def start_simulation(self) -> None:
+    def run_simulation(self) -> None:
+        """Run the simulation.
+
+        We loop through the total time given in the config file and update the universe at
+        each time step with the 'move()' method. Additionally we may add some more logic
+        that is checked at each time step, for example when the Earth and Mars are aligned
+        with ths Sun.
+        """
         for time in range(int(cf.TOT_TIME)):
             self.my_uni.move(time)
 
@@ -78,8 +89,10 @@ class Sim:
 
             # Add check to see if the rocket is close to Mars ...
 
+    def play_animation(self) -> None:
+        """Re-create the simulation by animating the trace of the objects."""
         # Now that the for loop is finished, the whole simulation is also finished. But
-        # instead of simulating every step, let us speed things up by keeping only every
+        # instead of animating every step, let us speed things up by keeping only every
         # n-th item from the trace lists.
         n = cf.FPS
         for obj in self.my_uni.objects:
@@ -91,7 +104,8 @@ class Sim:
 
 def main():
     sim = Sim()
-    sim.start_simulation()
+    sim.run_simulation()
+    sim.play_animation()
 
 
 if __name__ == "__main__":

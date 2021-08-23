@@ -1,4 +1,4 @@
-"""Functions that anumate.
+"""Functions that animate.
 
 Class from https://stackoverflow.com/questions/9401658/how-to-animate-a-scatter-plot,
 modified to accept input.
@@ -23,10 +23,10 @@ class AnimatedScatter(object):
         self.prepeare_data()
         self.stream = self.data_stream()
 
-        # Setup the figure and axes...
+        # Set-up the figure and axes...
         self.fig, self.ax = plt.subplots(figsize=(10, 10))
         self.ax.set_facecolor("k")
-        # Then setup FuncAnimation.
+        # Then set-up FuncAnimation.
         self.ani = animation.FuncAnimation(
             self.fig, self.update, interval=5, init_func=self.setup_plot, blit=True
         )
@@ -100,7 +100,7 @@ class AnimatedScatter(object):
         self.scat.set_offsets(data[:, :2])
         # Set sizes ...
         self.scat.set_sizes(300 * abs(data[:, 2]) ** 1.5 + 100)
-        # Set colors ...
+        # Set colours ...
         self.scat.set_array(data[:, 3])
 
         # Draw traces ...

@@ -37,6 +37,6 @@ V_earth = 29.78e3
 V_mars = 24.07e3
 
 # SIMULATION SPECIFIC
-FPS = 86400  # Number of seconds in one day = 86400
+FPS = 10  # Frames-per-second: speed up the animation
 SIZE = 3 * AU  # The side length of the simulated universe
-TOT_TIME = 1e3
+TOT_TIME = 5e4

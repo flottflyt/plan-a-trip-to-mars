@@ -115,7 +115,7 @@ class AnimatedScatter(object):
         # Set text position and update simulation time ...
         for txt, x, y in zip(self.txt[1:], data[:, 0], data[:, 1]):
             txt.set_position((x, y))
-        self.txt[0].set_text(f"Time = {i % cf.TOT_TIME}")
+        self.txt[0].set_text(f"Time = {i % cf.TOT_TIME * cf.FPS}")
 
         # We need to return the updated artists for FuncAnimation to draw..
         # Note that it expects a sequence of artists, so if we only had one artist we

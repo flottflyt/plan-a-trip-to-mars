@@ -43,7 +43,7 @@ class Sim:
             vel=pre.Vector2D(0, 4.8e3 + cf.V_earth),
         )
 
-        mars_shuttle.add_kick_event(0, 2.6e3, 250 * 24)
+        mars_shuttle.add_kick_event(0, 2.65e3, 250 * 24)
         # mars_shuttle.add_kick_event(0, cf.V_mars, 250 * 24)
         # mars_shuttle.add_kick_event(0, cf.V_mars, 250)
 

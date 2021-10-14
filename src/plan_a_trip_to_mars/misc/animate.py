@@ -9,13 +9,14 @@ import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 import numpy as np
 
-import plan_a_trip_to_mars.config as cf
-
 
 class AnimatedScatter:
     """An animated scatter plot using matplotlib.animations.FuncAnimation."""
 
-    def __init__(self, args):
+    def __init__(self, args, fps: int, size: float, tot_time: float):
+        self.fps = fps
+        self.size = size
+        self.tot_time = tot_time
         self.show_trace = False
         self.numpoints = len(args)
         self.points = args
@@ -63,7 +64,7 @@ class AnimatedScatter:
             )
             self.txt.append(getattr(self, f"txt_{j}"))
         # Define simulation area
-        self.ax.axis([-cf.SIZE, cf.SIZE, -cf.SIZE, cf.SIZE])
+        self.ax.axis([-self.size, self.size, -self.size, self.size])
 
         # For FuncAnimation's sake, we need to return the artist we'll be using
         # Note that it expects a sequence of artists, thus the trailing comma.
@@ -114,7 +115,7 @@ class AnimatedScatter:
         # Set text position and update simulation time ...
         for txt, x, y in zip(self.txt[1:], data[:, 0], data[:, 1]):
             txt.set_position((x, y))
-        self.txt[0].set_text(f"Time = {i % int(cf.TOT_TIME / cf.FPS)}")
+        self.txt[0].set_text(f"Time = {i % int(self.tot_time / self.fps)}")
 
         # We need to return the updated artists for FuncAnimation to draw. Note that it
         # expects a sequence of artists, so if we only had one artist we would add a

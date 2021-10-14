@@ -12,7 +12,7 @@ import numpy as np
 import plan_a_trip_to_mars.config as cf
 
 
-class AnimatedScatter(object):
+class AnimatedScatter:
     """An animated scatter plot using matplotlib.animations.FuncAnimation."""
 
     def __init__(self, args):
@@ -43,7 +43,6 @@ class AnimatedScatter(object):
         if self.show_trace:
             for j, (x_, y_) in enumerate(zip(x, y)):
                 setattr(self, f"line_{j}", self.ax.plot(x_, y_)[0])
-
         # Add text that display the simulation time
         self.txt = [
             self.ax.text(
@@ -117,17 +116,12 @@ class AnimatedScatter(object):
             txt.set_position((x, y))
         self.txt[0].set_text(f"Time = {i % cf.TOT_TIME * cf.FPS}")
 
-        # We need to return the updated artists for FuncAnimation to draw..
-        # Note that it expects a sequence of artists, so if we only had one artist we
-        # would add a trailing comma:
+        # We need to return the updated artists for FuncAnimation to draw. Note that it
+        # expects a sequence of artists, so if we only had one artist we would add a
+        # trailing comma:
         # return [self.scat,]
         returns = [self.scat]
         if self.show_trace:
             for j in range(len(self.points)):
                 returns.append(getattr(self, f"line_{j}"))
         return returns + self.txt
-
-
-if __name__ == "__main__":
-    a = AnimatedScatter()
-    plt.show()

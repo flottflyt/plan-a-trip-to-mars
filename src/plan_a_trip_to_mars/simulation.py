@@ -56,10 +56,10 @@ class Sim:
     def run_simulation(self) -> None:
         """Run the simulation.
 
-        We loop through the total time given in the config file and update the universe at
+        We loop through the total time given in `config.py` and update the universe at
         each time step with the 'move()' method. Additionally we may add some more logic
         that is checked at each time step, for example when the Earth and Mars are aligned
-        with ths Sun.
+        with the Sun.
         """
         for time in range(int(cf.TOT_TIME)):
             self.my_uni.move(time)

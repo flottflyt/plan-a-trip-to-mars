@@ -64,7 +64,7 @@ class Sim:
         for time in range(int(cf.TOT_TIME)):
             self.my_uni.move(time)
 
-            # Let us add some code that checks whether Sun, Earth and Mars is aligned.
+            # Let us add some code that checks whether Sun, Earth and Mars are aligned.
             s = self.my_uni.objects[0].pos.copy()
             e = self.my_uni.objects[1].pos.copy()
             e = e - s
@@ -74,16 +74,18 @@ class Sim:
             m_angle = math.degrees(math.atan2(m.y, m.x))
 
             # We say that if their angular positions differ with less than one degree,
-            # thay are at the same place in their orbits. This will trigger more than once
-            # per passage, but it does the job. Note also that the spi value greatly
-            # influences the  numerical precision and also the number of times the
+            # they are at the same place in their orbits. This will trigger more than once
+            # per passage, but it does the job. Note also that the 'spi' value greatly
+            # influences the numerical precision and also the number of times the
             # if-statements below will trigger.
             if abs(e_angle - m_angle) < 1:
-                print(f"Aligned at time = {time}")
+                print(f"Aligned at time = {time % int(cf.TOT_TIME / cf.FPS)}")
                 # New syntax in python >=3.9
                 # print(f"Aligned at {time = }")
             if abs(180 - e_angle + m_angle) < 1:
-                print(f"Opposite of each other at time = {time}")
+                print(
+                    f"Opposite of each other at time = {time % int(cf.TOT_TIME / cf.FPS)}"
+                )
                 # New syntax in python >=3.9
                 # print(f"Opposite of each other at {time = }")
 

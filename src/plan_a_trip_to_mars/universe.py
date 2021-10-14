@@ -113,6 +113,8 @@ class Rocket(Flyer):
             would expect from the right hand rule.
         speed: float
             The change in speed from the current speed (delta V)
+        time: int
+            The simulation time when the kick should be applied.
         """
         bisect.insort(self.kick_list, (time, angle, speed))
 

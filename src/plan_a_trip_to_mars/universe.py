@@ -6,9 +6,7 @@ from abc import ABC, abstractmethod
 from typing import Union
 
 import plan_a_trip_to_mars.misc.precode2 as pre
-
-# Gravitational constant
-G = 6.6743e-11
+from plan_a_trip_to_mars.config import G
 
 
 class Base(ABC):

@@ -4,22 +4,51 @@ Class from https://stackoverflow.com/questions/9401658/how-to-animate-a-scatter-
 modified to accept input.
 """
 from itertools import cycle
+from typing import Union
 
 import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 import numpy as np
 
+from plan_a_trip_to_mars.universe import Planet, Rocket
+
 
 class AnimatedScatter:
     """An animated scatter plot using matplotlib.animations.FuncAnimation."""
 
-    def __init__(self, args, fps: int, size: float, tot_time: float):
+    def __init__(
+        self,
+        objs: list[Union[Planet, Rocket]],
+        fps: int,
+        size: float,
+        time_scale: float,
+        unit: str,
+    ):
+        """Initialise animation of a simulated 2D solar system.
+
+        Parameters
+        ----------
+        obj: list[Union[Planet, Rocket]]
+            List of Planets and/or Rockets.
+        fps: int
+            Frames per second
+        size: float
+            The size of the plotting area. The plot is a square, thus size is the length
+            of one side.
+        time_scale: float
+            Divide the time printed in the animation by `time_scale` to get something more
+            readable or meaningful.
+        unit: str
+            Add a trailing string to the time in the animation, e.g. to set the time unit
+            used (s: seconds, h: hour, etc.)
+        """
         self.fps = fps
         self.size = size
-        self.tot_time = tot_time
+        self.time_scale = time_scale
+        self.unit = unit
         self.show_trace = False
-        self.numpoints = len(args)
-        self.points = args
+        self.numpoints = len(objs)
+        self.points = objs
         self.names = [obj.name for obj in self.points]
         self.prepeare_data()
         self.stream = self.data_stream()
@@ -27,7 +56,12 @@ class AnimatedScatter:
         # Set-up the figure and axes...
         self.fig, self.ax = plt.subplots(figsize=(10, 10))
         self.ax.set_facecolor("k")
-        # Then set-up FuncAnimation.
+        self.ax.set_xlabel("Meter")
+        self.ax.set_ylabel("Meter")
+        # Then set-up `FuncAnimation`. This is where the methods below are sent. Once an
+        # instance of `FuncAnimation` is made (and therefore also when an instance of this
+        # class, `AnimatedScatter`, is made) the animation is generated and played in a
+        # loop.
         self.ani = animation.FuncAnimation(
             self.fig, self.update, interval=5, init_func=self.setup_plot, blit=True
         )
@@ -42,8 +76,11 @@ class AnimatedScatter:
         )
         # Draw their trace
         if self.show_trace:
+            self.traces = []
             for j, (x_, y_) in enumerate(zip(x, y)):
                 setattr(self, f"line_{j}", self.ax.plot(x_, y_)[0])
+                self.traces.append(np.array([x_, y_]))
+            self.trace0 = self.traces.copy()
         # Add text that display the simulation time
         self.txt = [
             self.ax.text(
@@ -102,20 +139,31 @@ class AnimatedScatter:
         self.scat.set_sizes(300 * abs(data[:, 2]) ** 1.5 + 100)
         # Set colours ...
         self.scat.set_array(data[:, 3])
-
         # Draw traces ...
         if self.show_trace:
-            for j, obj in enumerate(self.points):
-                xs = [x[0] for x in obj.trace[: i + 1]]
-                ys = [y[1] for y in obj.trace[: i + 1]]
-                line = getattr(self, f"line_{j}")
-                line.set_xdata(xs)
-                line.set_ydata(ys)
-
+            # Get current positions ...
+            tr = []
+            for n1, n2 in zip(data[:, 0], data[:, 1]):
+                tr.append(np.array([n1, n2]))
+            # ... and check if it is the same as the initial one. If True, then re-set the
+            # trace lists.
+            if all([np.array_equal(t1, t2) for t1, t2 in zip(self.trace0, tr)]):
+                for j, (x_, y_) in enumerate(zip(data[:, 0], data[:, 1])):
+                    line = getattr(self, f"line_{j}")
+                    line.set_data(x_, y_)
+                self.traces = self.trace0.copy()
+            # Otherwise, append the new positions to the trace.
+            else:
+                for j, (t, (x_, y_)) in enumerate(zip(self.traces, data[:, :2])):
+                    self.traces[j] = np.c_[t, np.array([x_, y_])]
+                    line = getattr(self, f"line_{j}")
+                    line.set_data(self.traces[j][0, :], self.traces[j][1, :])
         # Set text position and update simulation time ...
         for txt, x, y in zip(self.txt[1:], data[:, 0], data[:, 1]):
             txt.set_position((x, y))
-        self.txt[0].set_text(f"Time = {i % int(self.tot_time / self.fps)}")
+        self.txt[0].set_text(
+            f"Time = {int(len(self.traces[0].T) / self.time_scale)}{self.unit}"
+        )
 
         # We need to return the updated artists for FuncAnimation to draw. Note that it
         # expects a sequence of artists, so if we only had one artist we would add a

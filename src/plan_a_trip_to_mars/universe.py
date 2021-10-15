@@ -100,7 +100,7 @@ class Rocket(Flyer):
         Flyer.__init__(self, *args, **kwargs)
         self.kick_list = []
 
-    def add_kick_event(self, angle: int, speed: float, time: int) -> None:
+    def add_kick_event(self, angle: float, speed: float, time: int) -> None:
         """Add an instant change of the velocity vector at any time during the simulation.
 
         Parameters
@@ -114,6 +114,8 @@ class Rocket(Flyer):
         time: int
             The simulation time when the kick should be applied.
         """
+        if not isinstance(time, int):
+            raise ValueError("'time' must be an int.")
         bisect.insort(self.kick_list, (time, angle, speed))
 
     def kick(self, time: int) -> None:
@@ -135,7 +137,7 @@ class Rocket(Flyer):
             # argument (or in general any int 'n') removes the 0-th (n-th) element and
             # returns it.
             the_kick = self.kick_list.pop(0)
-            delV = the_kick[2] * self.vel.normalized() * self.spi
+            delV: pre.Vector2D = the_kick[2] * self.vel.normalized() * self.spi
             self.vel += delV
             self.vel = self.vel.rotate(the_kick[1])
 
@@ -202,6 +204,12 @@ class Universe:
         Sets the hidden attribute __start to True and updates all objects with the
         current 'spi' value.
         """
+        if not self.objects:
+            raise NotImplementedError(
+                "You forgot to add/implement any Planet and/or Rocket objects. You can "
+                + "make a planet with the Planet class and a rocket with the Rocket "
+                + "class. Add them to your universe with method `self.add_object()`."
+            )
         self.__start = True
         for obj in self.objects:
             obj.spi = self.__spi

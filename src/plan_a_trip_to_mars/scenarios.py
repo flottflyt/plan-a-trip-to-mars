@@ -15,9 +15,14 @@ class BigScenario(ABC):
     """Abstract baseclass to create simulation scenarios."""
 
     # All times are in seconds
-    FPS = 24  # Frames-per-second: speed up the animation
     SIZE = 3 * cf.AU  # The side length of the simulated universe
+    # The time actual time used by the simulation is
+    FPS = 24  # Frames-per-second: speed up the animation
     TOT_TIME = 5e4  # The total time the animation should run
+    # Scale current time scale to get to a better unit, e.g. seconds to days:
+    # TIME_SCALE = 3600 * 24
+    TIME_SCALE = 1
+    UNIT = ""
 
     def __init__(self) -> None:
         self.my_uni = uni.Universe()
@@ -33,6 +38,10 @@ class BigScenario(ABC):
         creates the 'storyline'. If you want something to happen at some specified time,
         for example that a rocket should be launched at a specific day, this must be set
         here.
+
+        Note that the time used in the universe is seconds, unless some scaling is given
+        with the `uni.Universe().set_spi()` method, which specifies how many
+        'seconds-per-iteration' should be used.
         """
 
     def __finally(self) -> None:
@@ -44,7 +53,6 @@ class BigScenario(ABC):
             self.my_uni.move(time)
             self._run_simulation(time)
 
-    @abstractmethod
     def _run_simulation(self, time: int) -> None:
         """Any logic that should be done every time step of the simulation.
 
@@ -62,7 +70,9 @@ class BigScenario(ABC):
         n = self.FPS
         for obj in self.my_uni.objects:
             obj.trace = obj.trace[0::n]
-        a = ani.AnimatedScatter(self.my_uni.objects, self.FPS, self.SIZE, self.TOT_TIME)
+        a = ani.AnimatedScatter(
+            self.my_uni.objects, self.FPS, self.SIZE, self.TIME_SCALE, self.UNIT
+        )
         a.show_trace = True
         plt.show()
 
@@ -72,12 +82,13 @@ class MarsTransfer(BigScenario):
 
     # Change the default SIZE and FPS of the universe
     SIZE = 2.5 * cf.AU
-    FPS = 10
+    FPS = 24
+    TOT_TIME = 1e4
 
     def _create_complete_univers(self) -> None:
         """Implement the objects and events of our universe.
 
-        Let us create four objects; the Sun, Erath, Mars and a rocket. Then we give the
+        Let us create four objects; the Sun, Earth, Mars and a rocket. Then we give the
         rocket many arbitrary kicks just to see an example of how the `kick` actually
         works.
         """
@@ -148,3 +159,21 @@ class MarsTransfer(BigScenario):
             # print(f"Opposite of each other at {time = }")
 
         # Add check to see if the rocket is close to Mars ...
+
+
+class Simpl(BigScenario):
+
+    SIZE = 3e3
+    TOT_TIME = 1e4
+    TIME_SCALE = 60
+    UNIT = " mins"
+
+    def _create_complete_univers(self) -> None:
+        """Simplest case."""
+        stone = uni.Planet(
+            "Stone", 1e14, pos=pre.Vector2D(1e3, -1e3), vel=pre.Vector2D(0, 1.1)
+        )
+        rock = uni.Planet(
+            "Rock", 1e14, pos=pre.Vector2D(-1e3, -1e3), vel=pre.Vector2D(0, -1)
+        )
+        self.my_uni.add_object(stone, rock)

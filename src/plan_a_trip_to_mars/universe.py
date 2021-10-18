@@ -138,8 +138,8 @@ class Rocket(Flyer):
             # returns it.
             the_kick = self.kick_list.pop(0)
             delV: pre.Vector2D = the_kick[2] * self.vel.normalized() * self.spi
+            delV = delV.rotate(the_kick[1])
             self.vel += delV
-            self.vel = self.vel.rotate(the_kick[1])
 
 
 class Planet(Static):

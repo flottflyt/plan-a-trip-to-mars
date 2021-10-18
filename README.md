@@ -66,6 +66,6 @@ Explain.
 
 ### 6
 
-A rocket sits on a circular path, when a sudden impact in the radial direction sends it on
-a parabolic path. Find the velocity needed, and the closest point the rocket will come to
-the object it originally orbited.
+A rocket sits on a circular trajectory, when a sudden impact in the radial direction sends
+it on a parabolic trajectory. Find the velocity needed to get it on a parabolic
+trajectory, and the closest point the parabolic trajectory will have to the centre object.

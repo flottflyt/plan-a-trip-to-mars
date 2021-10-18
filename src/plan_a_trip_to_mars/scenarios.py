@@ -62,7 +62,7 @@ class BigScenario(ABC):
         the answer from the simulation must be implemented here.
         """
 
-    def play_animation(self) -> None:
+    def play_animation(self, save) -> None:
         """Re-create the simulation by animating the trace of the objects."""
         # Now that the for loop is finished, the whole simulation is also finished. But
         # instead of animating every step, let us speed things up by keeping only every
@@ -74,6 +74,8 @@ class BigScenario(ABC):
             self.my_uni.objects, self.FPS, self.SIZE, self.TIME_SCALE, self.UNIT
         )
         a.show_trace = True
+        if save[0]:
+            a.ani.save(f"data/animation.{save[1]}", fps=self.FPS)
         plt.show()
 
 

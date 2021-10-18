@@ -62,8 +62,14 @@ class AnimatedScatter:
         # instance of `FuncAnimation` is made (and therefore also when an instance of this
         # class, `AnimatedScatter`, is made) the animation is generated and played in a
         # loop.
+        # TODO: fix the number of frames
         self.ani = animation.FuncAnimation(
-            self.fig, self.update, interval=5, init_func=self.setup_plot, blit=True
+            self.fig,
+            self.update,
+            interval=5,
+            init_func=self.setup_plot,
+            blit=True,
+            frames=int(5e2),
         )
 
     def setup_plot(self):
@@ -75,12 +81,13 @@ class AnimatedScatter:
             x, y, c=c, s=s, vmin=0, vmax=1, cmap="jet", edgecolor="w"
         )
         # Draw their trace
+        self.traces = []
+        for j, (x_, y_) in enumerate(zip(x, y)):
+            self.traces.append(np.array([x_, y_]))
+        self.trace0 = self.traces.copy()
         if self.show_trace:
-            self.traces = []
             for j, (x_, y_) in enumerate(zip(x, y)):
                 setattr(self, f"line_{j}", self.ax.plot(x_, y_)[0])
-                self.traces.append(np.array([x_, y_]))
-            self.trace0 = self.traces.copy()
         # Add text that display the simulation time
         self.txt = [
             self.ax.text(
@@ -161,6 +168,7 @@ class AnimatedScatter:
         # Set text position and update simulation time ...
         for txt, x, y in zip(self.txt[1:], data[:, 0], data[:, 1]):
             txt.set_position((x, y))
+        # TODO: don't be dependent on the trace list
         self.txt[0].set_text(
             f"Time = {int(len(self.traces[0].T) / self.time_scale)}{self.unit}"
         )

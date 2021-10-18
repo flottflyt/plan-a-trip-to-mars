@@ -6,13 +6,14 @@ from plan_a_trip_to_mars import scenarios
 __SCENARIOS__ = {
     1: scenarios.MarsTransfer,
     2: scenarios.Simpl,
+    3: scenarios.Parabolic,
 }
 
 
 class Sim:
     def __init__(self) -> None:
         """Initialise the simulation setup."""
-        self.scenario = __SCENARIOS__[2]()
+        self.scenario = __SCENARIOS__[3]()
 
     def run_simulation(self) -> None:
         """Run the simulation."""

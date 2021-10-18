@@ -177,3 +177,37 @@ class Simpl(BigScenario):
             "Rock", 1e14, pos=pre.Vector2D(-1e3, -1e3), vel=pre.Vector2D(0, -1)
         )
         self.my_uni.add_object(stone, rock)
+
+
+class Parabolic(BigScenario):
+
+    SIZE = 5 * cf.AU
+    TOT_TIME = 1e4
+    FPS = 24
+    UNIT = " days"
+
+    def _create_complete_univers(self) -> None:
+        """Simplest case."""
+        sun = uni.Planet(
+            "Sun",
+            cf.M_sun,
+            pos=pre.Vector2D(0, 0),
+            vel=pre.Vector2D(0, 0),
+        )
+        rock = uni.Rocket(
+            "Rock",
+            1e4,
+            pos=pre.Vector2D(-cf.AU, 0),
+            vel=pre.Vector2D(0, cf.V_earth),
+        )
+        rotates = 49
+        stone = uni.Planet(
+            "Stone",
+            1e4,
+            pos=pre.Vector2D(-0.5 * cf.AU, 0).rotate(rotates),
+            vel=pre.Vector2D(0, 2 * cf.V_earth).rotate(rotates),
+        )
+        v_r = (1.0 * cf.G * cf.M_sun / cf.AU) ** (1 / 2)
+        rock.add_kick_event(90, v_r, 1000)
+        self.my_uni.add_object(sun, rock, stone)
+        self.my_uni.set_spi(3600)

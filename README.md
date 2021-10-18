@@ -63,3 +63,9 @@ that the rocket and Mars move as a pair.
 If the rocket missed a bit on the timing of the transfer orbit and is on Mars's orbit, but
 some distance behind, how would you adjust its velocity so that it overtakes Mars?
 Explain.
+
+### 6
+
+A rocket sits on a circular path, when a sudden impact in the radial direction sends it on
+a parabolic path. Find the velocity needed, and the closest point the rocket will come to
+the object it originally orbited.

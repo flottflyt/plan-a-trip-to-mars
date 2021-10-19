@@ -14,7 +14,8 @@ class Sim:
     def __init__(self) -> None:
         """Initialise the simulation setup."""
         self.scenario = __SCENARIOS__[1]()
-        self.save: tuple[bool, str] = (True, "mp4")
+        self.save: tuple[bool, str] = (False, "mp4")
+        self.trace: bool = False
 
     def run_simulation(self) -> None:
         """Run the simulation."""
@@ -22,7 +23,7 @@ class Sim:
 
     def play_animation(self) -> None:
         """Re-create the simulation by animating the trace of the objects."""
-        self.scenario.play_animation(self.save)
+        self.scenario.play_animation(self.save, self.trace)
 
 
 def main():

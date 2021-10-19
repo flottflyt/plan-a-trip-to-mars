@@ -1,6 +1,7 @@
 """Scenarios to run in the simulation class."""
 
 import math
+import os
 from abc import ABC, abstractmethod
 
 import matplotlib.pyplot as plt
@@ -62,7 +63,7 @@ class BigScenario(ABC):
         the answer from the simulation must be implemented here.
         """
 
-    def play_animation(self, save) -> None:
+    def play_animation(self, save: tuple[bool, str], trace: bool) -> None:
         """Re-create the simulation by animating the trace of the objects."""
         # Now that the for loop is finished, the whole simulation is also finished. But
         # instead of animating every step, let us speed things up by keeping only every
@@ -71,10 +72,16 @@ class BigScenario(ABC):
         for obj in self.my_uni.objects:
             obj.trace = obj.trace[0::n]
         a = ani.AnimatedScatter(
-            self.my_uni.objects, self.FPS, self.SIZE, self.TIME_SCALE, self.UNIT
+            self.my_uni.objects,
+            self.FPS,
+            self.TOT_TIME,
+            self.SIZE,
+            self.TIME_SCALE,
+            self.UNIT,
         )
-        a.show_trace = True
+        a.show_trace = trace
         if save[0]:
+            os.makedirs("data", exist_ok=True)
             a.ani.save(f"data/animation.{save[1]}", fps=self.FPS)
         plt.show()
 

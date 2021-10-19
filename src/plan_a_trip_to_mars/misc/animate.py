@@ -20,6 +20,7 @@ class AnimatedScatter:
         self,
         objs: list[Union[Planet, Rocket]],
         fps: int,
+        tot_time: float,
         size: float,
         time_scale: float,
         unit: str,
@@ -43,11 +44,13 @@ class AnimatedScatter:
             used (s: seconds, h: hour, etc.)
         """
         self.fps = fps
+        self.tot_time = tot_time
         self.size = size
         self.time_scale = time_scale
         self.unit = unit
         self.show_trace = False
-        self.numpoints = len(objs)
+        self.num_objs = len(objs)
+        self.num_pts = cycle(np.arange(len(objs[0].trace)))
         self.points = objs
         self.names = [obj.name for obj in self.points]
         self.prepeare_data()
@@ -62,32 +65,32 @@ class AnimatedScatter:
         # instance of `FuncAnimation` is made (and therefore also when an instance of this
         # class, `AnimatedScatter`, is made) the animation is generated and played in a
         # loop.
-        # TODO: fix the number of frames
         self.ani = animation.FuncAnimation(
             self.fig,
             self.update,
             interval=5,
             init_func=self.setup_plot,
             blit=True,
-            frames=int(5e2),
+            save_count=int(self.tot_time / self.fps),
         )
 
     def setup_plot(self):
         """Initial drawing of the scatter plot."""
-        x, y, s, c = next(self.stream).T
+        # x, y, s, c = next(self.stream).T
+        data, _ = next(self.stream)
+        x, y, s, c = data.T
 
         # Draw all objects as a scatter plot
         self.scat = self.ax.scatter(
             x, y, c=c, s=s, vmin=0, vmax=1, cmap="jet", edgecolor="w"
         )
         # Draw their trace
-        self.traces = []
-        for j, (x_, y_) in enumerate(zip(x, y)):
-            self.traces.append(np.array([x_, y_]))
-        self.trace0 = self.traces.copy()
         if self.show_trace:
+            self.traces = []
             for j, (x_, y_) in enumerate(zip(x, y)):
+                self.traces.append(np.array([x_, y_]))
                 setattr(self, f"line_{j}", self.ax.plot(x_, y_)[0])
+            self.trace0 = self.traces.copy()
         # Add text that display the simulation time
         self.txt = [
             self.ax.text(
@@ -129,16 +132,16 @@ class AnimatedScatter:
             self.p_list.append(cycle(obj.trace))
 
     def data_stream(self):
-        s, c = np.random.random((self.numpoints, 2)).T
+        s, c = np.random.random((self.num_objs, 2)).T
         while True:
             xy = np.array([next(pair) for pair in self.p_list])
             s = 0.1 * np.ones_like(xy[:, 0])
-            c += 0.02 * (np.random.random(self.numpoints) - 0.5)
-            yield np.c_[xy[:, 0], xy[:, 1], s, c]
+            c += 0.02 * (np.random.random(self.num_objs) - 0.5)
+            yield np.c_[xy[:, 0], xy[:, 1], s, c], next(self.num_pts)
 
     def update(self, i):
         """Update the scatter plot."""
-        data = next(self.stream)
+        data, idx = next(self.stream)
 
         # Set x and y data ...
         self.scat.set_offsets(data[:, :2])
@@ -148,13 +151,8 @@ class AnimatedScatter:
         self.scat.set_array(data[:, 3])
         # Draw traces ...
         if self.show_trace:
-            # Get current positions ...
-            tr = []
-            for n1, n2 in zip(data[:, 0], data[:, 1]):
-                tr.append(np.array([n1, n2]))
-            # ... and check if it is the same as the initial one. If True, then re-set the
-            # trace lists.
-            if all([np.array_equal(t1, t2) for t1, t2 in zip(self.trace0, tr)]):
+            # If we are back to the first time step, re-set the trace list.
+            if idx == 0:
                 for j, (x_, y_) in enumerate(zip(data[:, 0], data[:, 1])):
                     line = getattr(self, f"line_{j}")
                     line.set_data(x_, y_)
@@ -168,10 +166,7 @@ class AnimatedScatter:
         # Set text position and update simulation time ...
         for txt, x, y in zip(self.txt[1:], data[:, 0], data[:, 1]):
             txt.set_position((x, y))
-        # TODO: don't be dependent on the trace list
-        self.txt[0].set_text(
-            f"Time = {int(len(self.traces[0].T) / self.time_scale)}{self.unit}"
-        )
+        self.txt[0].set_text(f"Time = {int(idx / self.time_scale)}{self.unit}")
 
         # We need to return the updated artists for FuncAnimation to draw. Note that it
         # expects a sequence of artists, so if we only had one artist we would add a

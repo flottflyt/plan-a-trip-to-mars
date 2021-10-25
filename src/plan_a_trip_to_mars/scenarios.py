@@ -3,8 +3,10 @@
 import math
 import os
 from abc import ABC, abstractmethod
+from itertools import cycle
 
 import matplotlib.pyplot as plt
+import numpy as np
 
 import plan_a_trip_to_mars.config as cf
 import plan_a_trip_to_mars.misc.animate as ani
@@ -220,3 +222,48 @@ class Parabolic(BigScenario):
         rock.add_kick_event(90, v_r, 1000)
         self.my_uni.add_object(sun, rock, stone)
         self.my_uni.set_spi(3600)
+
+
+class Mayhem(BigScenario):
+
+    TOT_TIME = 5e4
+    SIZE = 5 * cf.AU
+
+    def _create_complete_univers(self) -> None:
+        """Absolute mayhem."""
+        self.my_uni.set_spi(3600)
+        rockets = ["1", "2", "3", "4", "5"]
+        m = 1e30
+        origo = pre.Vector2D(0, - 4 * cf.AU)
+        poss = [
+            origo + pre.Vector2D(-cf.AU, 0),
+            origo + pre.Vector2D(-cf.AU, 0).rotate(245),
+            origo + pre.Vector2D(-cf.AU, 0).rotate(40),
+            origo + pre.Vector2D(-cf.AU, 0).rotate(330),
+            origo + pre.Vector2D(-cf.AU, 0).rotate(180),
+        ]
+        vels = [
+            pre.Vector2D(0, cf.V_earth).rotate(180),
+            pre.Vector2D(0, cf.V_earth).rotate(80),
+            pre.Vector2D(0, cf.V_earth).rotate(280),
+            pre.Vector2D(0, cf.V_earth).rotate(10),
+            pre.Vector2D(0, cf.V_earth),
+        ]
+        objs = [uni.Rocket(n, m, p, v) for n, p, v in zip(rockets, poss, vels)]
+        self.my_uni.add_object(*objs)
+        angle = [180, 277, 10, 200, 55, 170, 234, 62, 300, 340, 145, 82, 91, 240, 340, 180, 180, 180, 180, 180, 180]
+        velocities = (
+            np.array(
+                [180, 277, 10, 0, 55, 170, 34, 62, 30, 30, 45, 82, 91, 0, 0, 20, 200, 200, 200, 200, 0]
+            )
+            * cf.V_earth
+            / 100
+        )
+        times = (
+            np.array(
+                [180, 277, 10, 60, 55, 170, 34, 62, 300, 340, 45, 82, 91, 240, 340, 20, 180, 180, 180, 180, 180]
+            )
+            * 24
+        )
+        # for o, a, v, t in zip(cycle(objs), angle, velocities, times):
+        #     o.add_kick_event(a, v, int(t))

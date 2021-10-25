@@ -90,7 +90,6 @@ class AnimatedScatter:
             for j, (x_, y_) in enumerate(zip(x, y)):
                 self.traces.append(np.array([x_, y_]))
                 setattr(self, f"line_{j}", self.ax.plot(x_, y_)[0])
-            self.trace0 = self.traces.copy()
         # Add text that display the simulation time
         self.txt = [
             self.ax.text(
@@ -153,10 +152,9 @@ class AnimatedScatter:
         if self.show_trace:
             # If we are back to the first time step, re-set the trace list.
             if idx == 0:
+                self.traces = []
                 for j, (x_, y_) in enumerate(zip(data[:, 0], data[:, 1])):
-                    line = getattr(self, f"line_{j}")
-                    line.set_data(x_, y_)
-                self.traces = self.trace0.copy()
+                    self.traces.append(np.array([x_, y_]))
             # Otherwise, append the new positions to the trace.
             else:
                 for j, (t, (x_, y_)) in enumerate(zip(self.traces, data[:, :2])):

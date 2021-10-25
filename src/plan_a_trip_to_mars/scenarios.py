@@ -92,7 +92,7 @@ class MarsTransfer(BigScenario):
     # Change the default SIZE and FPS of the universe
     SIZE = 2.5 * cf.AU
     FPS = 24
-    TOT_TIME = 1e4
+    TOT_TIME = 24 * 365 * 2
 
     def _create_complete_univers(self) -> None:
         """Implement the objects and events of our universe.
@@ -173,7 +173,7 @@ class MarsTransfer(BigScenario):
 class Simpl(BigScenario):
 
     SIZE = 3e3
-    TOT_TIME = 1e4
+    TOT_TIME = 50 * 60 * 24
     TIME_SCALE = 60
     UNIT = " mins"
 

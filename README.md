@@ -2,6 +2,33 @@
 
 ## Install
 
+### Pyenv and poetry
+
+(See their github repos, [here](https://github.com/pyenv/pyenv#installation) or
+[here](https://github.com/pyenv/pyenv-installer), for a detailed guide.) Pyenv is
+installed with
+
+```sh
+curl https://pyenv.run | bash
+```
+
+(Mac and Linux only.) Next, you have to add some commands to your `.zshrc` file.
+
+```sh
+export PATH="$HOME/.pyenv/bin:$PATH"
+eval "$(pyenv init --path)"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+```
+
+Poetry is simpler. You just do:
+
+```sh
+curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python -
+```
+
+### Package `plan-a-trip-to-mars`
+
 With `poetry`:
 
 ```sh
@@ -17,7 +44,7 @@ poetry run plan-a-trip-to-mars
 Without `poetry` (using `pip`):
 
 ```sh
-python -m pip install -e .
+python setup.py install
 ```
 
 and run with:

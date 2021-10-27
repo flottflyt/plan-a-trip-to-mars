@@ -12,10 +12,14 @@ __SCENARIOS__ = {
 
 class Sim:
     def __init__(self) -> None:
-        """Initialise the simulation setup."""
+        """Initialise the simulation setup.
+
+        Decide which scenario to run, if and in what format it should be saved and whether
+        to show the trace or not.
+        """
         self.scenario = __SCENARIOS__[3]()
         self.save: tuple[bool, str] = (False, "mp4")
-        self.trace: bool = True
+        self.trace: bool = False
 
     def run_simulation(self) -> None:
         """Run the simulation."""

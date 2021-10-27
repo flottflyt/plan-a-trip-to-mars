@@ -1,5 +1,7 @@
 # :rocket: Plan A Trip To Mars :rocket:
 
+![](assets/animation.gif)
+
 ## Problems
 
 ### 1

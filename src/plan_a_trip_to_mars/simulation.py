@@ -15,9 +15,9 @@ __SCENARIOS__ = {
 class Sim:
     def __init__(self) -> None:
         """Initialise the simulation setup."""
-        self.scenario = __SCENARIOS__[1]()
+        self.scenario = __SCENARIOS__[4]()
         self.save: tuple[bool, str] = (True, "mp4")
-        self.trace: bool = False
+        self.trace: bool = True
 
     def run_simulation(self) -> None:
         """Run the simulation."""

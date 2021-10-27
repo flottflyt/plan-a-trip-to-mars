@@ -224,7 +224,7 @@ class Parabolic(BigScenario):
 
 class Mayhem(BigScenario):
 
-    TOT_TIME = 5e4
+    TOT_TIME = 3e4
     SIZE = 5 * cf.AU
 
     def _create_complete_univers(self) -> None:

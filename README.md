@@ -53,6 +53,32 @@ and run with:
 plan-a-trip-to-mars
 ```
 
+## Usage
+
+### Scenario constants
+
+There are four scenario constants:
+
+-   [`TOT_TIME`]: The total time of the simulation, in units of `spi`. That is, changing
+    the `spi` will change the unit of the total time (e.g. seconds to hours). This value
+    decides how many iterations the simulation will use.
+-   [`FPS`]: The frame rate of the animation. After the simulation has been calculated,
+    only every n-th iteration is used (for an FPS of n). Useful if you need high temporal
+    resolution, but a faster simulation.
+-   [`TIME_SCALE`]: The clock shown in the animation is divided by `TIME_SCALE`,
+    effectively changing the time unit.
+-   [`UNIT`]: Add a time unit to the simulation clock.
+
+#### `spi`
+
+The `spi` decides how many seconds pass per iteration (seconds-per-iteration). By default,
+everything is calculated using SI units, meaning seconds for time. This quickly become
+computationally expensive when you want to simulate a solar system. Setting the `spi` to
+`3600` will instead update all positions, velocities, etc. every hour.
+
+Changing the `spi` will also change the unit of every other physical quantity. Adding
+a kick event with an `spi` of ``
+
 ## TODO
 
 Things I can change so it become more challenging:

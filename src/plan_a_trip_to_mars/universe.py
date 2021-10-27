@@ -100,8 +100,16 @@ class Rocket(Flyer):
         Flyer.__init__(self, *args, **kwargs)
         self.kick_list = []
 
-    def add_kick_event(self, angle: float, speed: float, time: int) -> None:
+    def add_kick_event(
+        self, angle: float, speed: float, time: int, static: bool = False
+    ) -> None:
         """Add an instant change of the velocity vector at any time during the simulation.
+
+        By default, the angle refers to the current velocity of the rocket. If, however,
+        the velocity of the rocket is zero, so that it cannot be normalised, the direction
+        is re-set to the default direction towards east / right, and angle will describe
+        the angle on a typical unit circle. This behaviour can also be accomplished by
+        setting `static` to True (referring to a static coordinate system).
 
         Parameters
         ----------
@@ -113,10 +121,14 @@ class Rocket(Flyer):
             The change in speed from the current speed (delta V)
         time: int
             The simulation time when the kick should be applied.
+        static: bool, optional
+            If the angle is with respect to the universe grid, set static to True,
+            otherwise, the angle is relative to the velocity of the rocket. Defaults to
+            False.
         """
         if not isinstance(time, int):
             raise ValueError("'time' must be an int.")
-        bisect.insort(self.kick_list, (time, angle, speed))
+        bisect.insort(self.kick_list, (time, angle, speed, static))
 
     def kick(self, time: int) -> None:
         """Kicking the rocket object will completely reset its velocity.
@@ -137,7 +149,13 @@ class Rocket(Flyer):
             # argument (or in general any int 'n') removes the 0-th (n-th) element and
             # returns it.
             the_kick = self.kick_list.pop(0)
-            delV: pre.Vector2D = the_kick[2] * self.vel.normalized() * self.spi
+            try:
+                self.vel.normalized()
+            except Exception:
+                dir = pre.Vector2D(1, 0)
+            else:
+                dir = pre.Vector2D(1, 0) if the_kick[3] else self.vel
+            delV: pre.Vector2D = the_kick[2] * dir.normalized() * self.spi
             delV = delV.rotate(the_kick[1])
             self.vel += delV
 
@@ -238,10 +256,12 @@ class Universe:
                 obj.kick(time)
 
     def __calculate_force(self, obj: Union[Planet, Rocket]) -> None:
-        """Should be called only from within this class.
+        """Calculate the sum of forces on each object.
 
         Updates the gravitational force a given object feels from all other objects in the
         universe.
+
+        Should be called only from within this class.
 
         Parameters
         ----------
@@ -258,8 +278,8 @@ class Universe:
             # Find the distance vector between one of the other objects and calculate the
             # gravitational pull it get from this
             distance_vec = o.pos - obj.pos
-            gravityForce = G * (obj.mass * o.mass) / (abs(distance_vec) ** 2)
+            gravity = G * (obj.mass * o.mass) / (abs(distance_vec) ** 2)
             # Add the gravitational pull from this one object to the net sum of all forces
-            net_force += gravityForce * distance_vec.normalized()
+            net_force += gravity * distance_vec.normalized()
 
         obj.acc = net_force / obj.mass

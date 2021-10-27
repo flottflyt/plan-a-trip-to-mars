@@ -84,7 +84,7 @@ class BigScenario(ABC):
         a.show_trace = trace
         if save[0]:
             os.makedirs("data", exist_ok=True)
-            a.ani.save(f"data/animation.{save[1]}", fps=self.FPS)
+            a.ani.save(f"data/animation.{save[1]}", fps=48)
         plt.show()
 
 
@@ -129,8 +129,6 @@ class MarsTransfer(BigScenario):
         )
 
         mars_shuttle.add_kick_event(0, 2.65e3, 250 * 24)
-        # mars_shuttle.add_kick_event(0, cf.V_mars, 250 * 24)
-        # mars_shuttle.add_kick_event(0, cf.V_mars, 250)
 
         # Create the universe all objects should live in
         self.my_uni.add_object(sun, earth, mars, mars_shuttle)
@@ -251,85 +249,48 @@ class Mayhem(BigScenario):
         ]
         objs = [uni.Rocket(n, m, p, v) for n, p, v in zip(rockets, poss, vels)]
         self.my_uni.add_object(*objs)
-        angle = [
-            180,
-            277,
-            10,
-            200,
-            55,
-            170,
-            234,
-            62,
-            300,
-            340,
-            145,
-            82,
-            91,
-            240,
-            340,
-            180,
-            180,
-            180,
-            180,
-            180,
-            180,
-        ]
+        angle = [180, 277, 10, 200, 55, 170, 234, 62, 300, 340, 340, 180]
         velocities = (
-            np.array(
-                [
-                    180,
-                    277,
-                    10,
-                    0,
-                    55,
-                    170,
-                    34,
-                    62,
-                    30,
-                    30,
-                    45,
-                    82,
-                    91,
-                    0,
-                    0,
-                    20,
-                    200,
-                    200,
-                    200,
-                    200,
-                    0,
-                ]
-            )
-            * cf.V_earth
-            / 100
+            np.array([180, 277, 10, 0, 30, 30, 45, 82, 91, 0, 0, 20]) * cf.V_earth / 100
         )
-        times = (
-            np.array(
-                [
-                    180,
-                    277,
-                    10,
-                    60,
-                    55,
-                    170,
-                    34,
-                    62,
-                    300,
-                    340,
-                    45,
-                    82,
-                    91,
-                    240,
-                    340,
-                    20,
-                    180,
-                    180,
-                    180,
-                    180,
-                    180,
-                ]
-            )
-            * 24
-        )
+        times = np.array([180, 277, 34, 62, 300, 340, 45, 82, 91, 240, 340, 20]) * 24
         # for o, a, v, t in zip(cycle(objs), angle, velocities, times):
         #     o.add_kick_event(a, v, int(t))
+
+
+class Jerk(BigScenario):
+
+    TOT_TIME = 1e3
+    SIZE = 5e3
+    FPS = 1
+
+    def _create_complete_univers(self) -> None:
+        bounce = uni.Rocket("Bounce", 1e3, pos=pre.Vector2D(-1e3, 4e3))
+        self.my_uni.add_object(bounce)
+        jerks = [
+            (45, 10, 100, True),
+            (180, 10, 200, False),  # (225, 10, 200, True) would give the same result
+            (-45, 10, 300, True),
+            (-90, 10, 350, True),
+            (-100, 10, 370, True),
+            (-110, 10, 390, True),
+            (-120, 10, 410, True),
+            (-130, 10, 430, True),
+            (-140, 10, 450, True),
+            (-150, 10, 470, True),
+            (-160, 10, 490, True),
+            (-170, 10, 510, True),
+            (180, 100, 530, False),
+            (180, 17.394, 730, False),
+            (-40, 50, 800, True),
+            (180, 50, 840, False),
+            (110, 50, 841, True),
+            (180, 50, 880, False),
+            (250, 50, 881, True),
+            (180, 50, 920, False),
+            (40, 50, 921, True),
+            (180, 50, 960, False),
+            (180, 50, 961, True),
+        ]
+        for j in jerks:
+            bounce.add_kick_event(*j)

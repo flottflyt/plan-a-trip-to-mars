@@ -43,6 +43,8 @@ trajectory, and the closest point the parabolic trajectory will have to the cent
 
 ### Pyenv and poetry
 
+#### For virtual environments
+
 To install `pyenv`, see their github repos,
 [here](https://github.com/pyenv/pyenv#installation) and/or
 [here](https://github.com/pyenv/pyenv-installer), for a detailed guide.
@@ -50,6 +52,8 @@ To install `pyenv`, see their github repos,
 Another project that takes care of virtual environments in a nice way is
 [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/). And even more
 than these two examples exists.
+
+#### For python packaging
 
 [`poetry`](https://python-poetry.org/docs/master/#installation) is simpler, you just do:
 
@@ -120,7 +124,7 @@ There are five scenario constants:
     the `spi` will change the unit of the total time (e.g. seconds to hours). This value
     decides how many iterations the simulation will use.
 -   `FPS`: The frame rate of the animation. After the simulation has been calculated,
-    only every n-th iteration is used (for an FPS of n). Useful if you need high temporal
+    only every `n`-th iteration is used (for `FPS=n`). Useful if you need high temporal
     resolution, but a faster simulation.
 -   `TIME_SCALE`: The clock shown in the animation is divided by `TIME_SCALE`,
     effectively changing the time unit.

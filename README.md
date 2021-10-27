@@ -2,9 +2,8 @@
 
 ## Install
 
-<details>
-<summary>Pyenv and poetry</summary>
-<br>
+### Pyenv and poetry
+
 (See their github repos, [here](https://github.com/pyenv/pyenv#installation) or
 [here](https://github.com/pyenv/pyenv-installer), for a detailed guide.) Pyenv is
 installed with
@@ -18,11 +17,9 @@ Poetry is simpler. You just do:
 ```sh
 curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python -
 ```
-</details>
 
-<details>
-<summary>Package `plan-a-trip-to-mars`</summary>
-<br>
+### Package `plan-a-trip-to-mars`
+
 With `poetry`:
 
 ```sh
@@ -46,13 +43,11 @@ and run with:
 ```sh
 plan-a-trip-to-mars
 ```
-</details>
 
 ## Usage
 
-<details>
-<summary>Scenario constants</summary>
-<br>
+### Scenario constants
+
 There are five scenario constants:
 
 -   `SIZE`: The length of the sides of the simulation, in metres.
@@ -65,17 +60,14 @@ There are five scenario constants:
 -   `TIME_SCALE`: The clock shown in the animation is divided by `TIME_SCALE`,
     effectively changing the time unit.
 -   `UNIT`: Add a time unit to the simulation clock.
-</details>
 
-<details>
-<summary>`spi`</summary>
-<br>
+### `spi`
+
 The `spi` decides how many seconds pass per iteration (seconds-per-iteration). By default,
 everything is calculated using SI units, meaning seconds for time. This quickly become
 computationally expensive when you want to simulate a solar system. Setting the `spi` to
 `3600` will instead update all positions, velocities, etc. every hour. Be careful to also
 change the timing of events; the time of a rocket's `kick` is now specified in hours.
-</details>
 
 ## TODO
 

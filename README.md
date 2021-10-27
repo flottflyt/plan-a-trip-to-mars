@@ -3,7 +3,7 @@
 ## Install
 
 <details>
-<summary>### Pyenv and poetry</summary>
+<summary><h3>Pyenv and poetry</h3></summary>
 <br>
 (See their github repos, [here](https://github.com/pyenv/pyenv#installation) or
 [here](https://github.com/pyenv/pyenv-installer), for a detailed guide.) Pyenv is
@@ -21,7 +21,7 @@ curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-
 </details>
 
 <details>
-<summary>### Package `plan-a-trip-to-mars`</summary>
+<summary><h3>Package `plan-a-trip-to-mars`</h3></summary>
 <br>
 With `poetry`:
 
@@ -51,7 +51,7 @@ plan-a-trip-to-mars
 ## Usage
 
 <details>
-<summary>### Scenario constants</summary>
+<summary><h3>Scenario constants</h3></summary>
 <br>
 There are five scenario constants:
 
@@ -68,7 +68,7 @@ There are five scenario constants:
 </details>
 
 <details>
-<summary>### `spi`</summary>
+<summary><h3>`spi`</h3></summary>
 <br>
 The `spi` decides how many seconds pass per iteration (seconds-per-iteration). By default,
 everything is calculated using SI units, meaning seconds for time. This quickly become

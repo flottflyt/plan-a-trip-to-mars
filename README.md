@@ -1,82 +1,5 @@
 # :rocket: Plan A Trip To Mars :rocket:
 
-## Install
-
-### Pyenv and poetry
-
-(See their github repos, [here](https://github.com/pyenv/pyenv#installation) or
-[here](https://github.com/pyenv/pyenv-installer), for a detailed guide.) Pyenv is
-installed with
-
-```sh
-curl https://pyenv.run | bash
-```
-
-Poetry is simpler. You just do:
-
-```sh
-curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python -
-```
-
-### Package `plan-a-trip-to-mars`
-
-With `poetry`:
-
-```sh
-poetry install
-```
-
-and run with:
-
-```sh
-poetry run plan-a-trip-to-mars
-```
-
-Without `poetry` (using `pip`):
-
-```sh
-python setup.py install
-```
-
-and run with:
-
-```sh
-plan-a-trip-to-mars
-```
-
-## Usage
-
-### Scenario constants
-
-There are five scenario constants:
-
--   `SIZE`: The length of the sides of the simulation, in metres.
--   `TOT_TIME`: The total time of the simulation, in units of `spi`. That is, changing
-    the `spi` will change the unit of the total time (e.g. seconds to hours). This value
-    decides how many iterations the simulation will use.
--   `FPS`: The frame rate of the animation. After the simulation has been calculated,
-    only every n-th iteration is used (for an FPS of n). Useful if you need high temporal
-    resolution, but a faster simulation.
--   `TIME_SCALE`: The clock shown in the animation is divided by `TIME_SCALE`,
-    effectively changing the time unit.
--   `UNIT`: Add a time unit to the simulation clock.
-
-### `spi`
-
-The `spi` decides how many seconds pass per iteration (seconds-per-iteration). By default,
-everything is calculated using SI units, meaning seconds for time. This quickly become
-computationally expensive when you want to simulate a solar system. Setting the `spi` to
-`3600` will instead update all positions, velocities, etc. every hour. Be careful to also
-change the timing of events; the time of a rocket's `kick` is now specified in hours.
-
-## TODO
-
-Things I can change so it become more challenging:
-
-- Change time scale (FPS)
-- Move planets and/or change their velocities to be off
-- Git the rocket many arbitrary kicks
-
 ## Problems
 
 ### 1
@@ -115,3 +38,102 @@ Explain.
 A rocket sits on a circular trajectory, when a sudden impact in the radial direction sends
 it on a parabolic trajectory. Find the velocity needed to get it on a parabolic
 trajectory, and the closest point the parabolic trajectory will have to the centre object.
+
+## Install
+
+### Pyenv and poetry
+
+(See their github repos, [here](https://github.com/pyenv/pyenv#installation) or
+[here](https://github.com/pyenv/pyenv-installer), for a detailed guide.) Pyenv is
+installed with
+
+```sh
+curl https://pyenv.run | bash
+```
+
+and then you will need to resort to the provided links above to see the OS specific
+guides.
+
+Poetry is simpler. You just do:
+
+```sh
+curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python -
+```
+
+### Package `plan-a-trip-to-mars`
+
+#### With `poetry`
+
+It is always useful to use a virtual environment for a new python project, for example
+`pyenv`. If you install using `poetry` and a virtual environment is not activated,
+`poetry` will set one up and install into it. If an environment is activated, `poetry`
+will notice and install into this. In either case, do:
+
+```sh
+poetry install
+```
+
+and run with:
+
+```sh
+poetry run plan-a-trip-to-mars
+poetry run python src/plan_a_trip_to_mars/simulation.py
+```
+
+Alternatively you can start the virtual environment with `poetry shell` and run the
+program like you normally would:
+
+```sh
+plan-a-trip-to-mars
+python src/plan_a_trip_to_mars/simulation.py
+```
+
+#### Without `poetry` (using `pip`):
+
+If you do not want to use `poetry`, a second option is to install with the `setup.py`
+script. This will install into a virtual environment if one is already activated, or to
+your global python version if no virtual environment is activated. In either case, do:
+
+```sh
+python setup.py install
+```
+
+and run with:
+
+```sh
+plan-a-trip-to-mars
+python src/plan_a_trip_to_mars/simulation.py
+```
+
+## Usage
+
+### Scenario constants
+
+There are five scenario constants:
+
+-   `SIZE`: The length of the sides of the simulation, in metres.
+-   `TOT_TIME`: The total time of the simulation, in units of `spi`. That is, changing
+    the `spi` will change the unit of the total time (e.g. seconds to hours). This value
+    decides how many iterations the simulation will use.
+-   `FPS`: The frame rate of the animation. After the simulation has been calculated,
+    only every n-th iteration is used (for an FPS of n). Useful if you need high temporal
+    resolution, but a faster simulation.
+-   `TIME_SCALE`: The clock shown in the animation is divided by `TIME_SCALE`,
+    effectively changing the time unit.
+-   `UNIT`: Add a time unit to the simulation clock.
+
+### `spi`
+
+The `spi` decides how many seconds pass per iteration (seconds-per-iteration). By default,
+everything is calculated using SI units, meaning seconds for time. This quickly become
+computationally expensive when you want to simulate a solar system. Setting the `spi` to
+`3600` will instead update all positions, velocities, etc. every hour. Be careful to also
+change the timing of events; the time of a rocket's `kick` is now specified in hours.
+
+## TODO
+
+Things I can change so it become more challenging:
+
+- Change time scale (FPS)
+- Move planets and/or change their velocities to be off
+- Git the rocket many arbitrary kicks

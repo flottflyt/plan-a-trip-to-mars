@@ -4,19 +4,17 @@
 from plan_a_trip_to_mars import scenarios
 
 __SCENARIOS__ = {
-    1: scenarios.MarsTransfer,
-    2: scenarios.Simpl,
-    3: scenarios.Parabolic,
-    4: scenarios.Mayhem,
-    5: scenarios.Jerk,
+    1: scenarios.Simpl,
+    2: scenarios.Mayhem,
+    3: scenarios.Jerk,
 }
 
 
 class Sim:
     def __init__(self) -> None:
         """Initialise the simulation setup."""
-        self.scenario = __SCENARIOS__[4]()
-        self.save: tuple[bool, str] = (True, "mp4")
+        self.scenario = __SCENARIOS__[3]()
+        self.save: tuple[bool, str] = (False, "mp4")
         self.trace: bool = True
 
     def run_simulation(self) -> None:

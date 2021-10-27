@@ -43,24 +43,24 @@ trajectory, and the closest point the parabolic trajectory will have to the cent
 
 ### Pyenv and poetry
 
-(See their github repos, [here](https://github.com/pyenv/pyenv#installation) or
-[here](https://github.com/pyenv/pyenv-installer), for a detailed guide.) Pyenv is
-installed with
+To install `pyenv`, see their github repos,
+[here](https://github.com/pyenv/pyenv#installation) and/or
+[here](https://github.com/pyenv/pyenv-installer), for a detailed guide.
 
-```sh
-curl https://pyenv.run | bash
-```
-
-and then you will need to resort to the provided links above to see the OS specific
-guides.
-
-Poetry is simpler. You just do:
+`poetry` is simpler, you just do:
 
 ```sh
 curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python -
 ```
 
 ### Package `plan-a-trip-to-mars`
+
+Clone the repository and `cd` into it:
+
+```sh
+git clone <repo-url>
+cd plan-a-trip-to-mars
+```
 
 #### With `poetry`
 
@@ -122,18 +122,10 @@ There are five scenario constants:
     effectively changing the time unit.
 -   `UNIT`: Add a time unit to the simulation clock.
 
-### `spi`
+### `Universe().set_spi()`
 
 The `spi` decides how many seconds pass per iteration (seconds-per-iteration). By default,
 everything is calculated using SI units, meaning seconds for time. This quickly become
 computationally expensive when you want to simulate a solar system. Setting the `spi` to
 `3600` will instead update all positions, velocities, etc. every hour. Be careful to also
 change the timing of events; the time of a rocket's `kick` is now specified in hours.
-
-## TODO
-
-Things I can change so it become more challenging:
-
-- Change time scale (FPS)
-- Move planets and/or change their velocities to be off
-- Git the rocket many arbitrary kicks

@@ -47,7 +47,11 @@ To install `pyenv`, see their github repos,
 [here](https://github.com/pyenv/pyenv#installation) and/or
 [here](https://github.com/pyenv/pyenv-installer), for a detailed guide.
 
-`poetry` is simpler, you just do:
+Another project that takes care of virtual environments in a nice way is
+[virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/). And even more
+than these two examples exists.
+
+[`poetry`](https://python-poetry.org/docs/master/#installation) is simpler, you just do:
 
 ```sh
 curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python -

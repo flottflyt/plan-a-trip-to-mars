@@ -1,6 +1,5 @@
 """Scenarios to run in the simulation class."""
 
-import math
 import os
 from abc import ABC, abstractmethod
 from itertools import cycle

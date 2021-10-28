@@ -31,10 +31,10 @@ repos:
     entry: poetry run black src
     types: [python]
 
-  - id: pytest
-    name: pytest
-    stages: [commit]
-    language: system
-    entry: poetry run pytest tests
-    types: [python]
-    pass_filenames: false
+  # - id: pytest
+  #   name: pytest
+  #   stages: [commit]
+  #   language: system
+  #   entry: poetry run pytest tests
+  #   types: [python]
+  #   pass_filenames: false

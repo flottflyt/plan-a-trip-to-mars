@@ -98,7 +98,7 @@ plan-a-trip-to-mars
 python src/plan_a_trip_to_mars/simulation.py
 ```
 
-#### Without `poetry` (using `pip`):
+#### Without `poetry` (using `pip`)
 
 If you do not want to use `poetry`, a second option is to install with the `setup.py`
 script. This will install into a virtual environment if one is already activated, or to

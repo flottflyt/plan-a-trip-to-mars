@@ -26,3 +26,7 @@ jobs:
       - name: Run test suite
         run: |
           python -m poetry run pytest
+          python -m poetry run python -m pytest
+          poetry run python -m pytest
+          python -m pytest
+          poetry run pytest

@@ -1,21 +1,16 @@
 repos:
 
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v2.3.0
+  rev: v4.0.1
   hooks:
 
   - id: check-yaml
   - id: end-of-file-fixer
   - id: trailing-whitespace
+  - id: check-added-large-files
 
 - repo: local
   hooks:
-
-  - id: check-added-large-files
-    name: Check for added large files
-    stages: [commit]
-    entry: check-added-large-files
-    language: system
 
   - id: isort
     name: isort

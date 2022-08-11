@@ -6,25 +6,24 @@ Those values that are not present in the `astropy` library are found at:
     https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
 """
 
-import astropy.constants as c
 
 # PHYSICAL CONSTANTS
 
 # Gravitational constant
-G = c.G.value
+G = 6.6743e-11  # c.G.value
 
 # 1 astronomical unit (average distance between Sun and Earth)
-AU = c.au.value
+AU = 1.495978707e11  # c.au.value
 
 # Mass of ...
-M_sun = c.M_sun.value
-M_earth = c.M_earth.value
+M_sun = 1.989e30  # c.M_sun.value
+M_earth = 5.972e24  # c.M_earth.value
 M_mars = 0.64171e24
 M_moon = 0.07346e24
 
 # Raduis of ...
-R_sun = c.R_sun.value
-R_earth = c.R_earth.value
+R_sun = 6.95700e8  # c.R_sun.value
+R_earth = 6.3781e6  # c.R_earth.value
 R_mars = 3396.2e3
 R_moon = 1738.1e3
 

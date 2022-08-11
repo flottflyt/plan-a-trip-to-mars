@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "plan-a-trip-to-mars"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
 authors = ["engeir <eirroleng@gmail.com>"]
 license = "MIT"
@@ -10,9 +10,9 @@ plan-a-trip-to-mars = "plan_a_trip_to_mars.__main__:main"
 
 [tool.poetry.dependencies]
 python = ">=3.7,<3.11"
-astropy = "^4.3.1"
 matplotlib = "^3.4.3"
 numpy = "^1.21.2"
+importlib-metadata = "^4.12.0"
 
 [tool.poetry.dev-dependencies]
 black = "^21.7b0"

@@ -25,4 +25,5 @@ jobs:
 
       - name: Run test suite
         run: |
+          source "$HOME/.rye/env"
           rye run pytest

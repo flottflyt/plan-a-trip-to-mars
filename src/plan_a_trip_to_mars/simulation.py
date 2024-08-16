@@ -1,5 +1,4 @@
-"""The script where we program what the simulated universe should look like.
-"""
+"""The script where we program what the simulated universe should look like."""
 
 from plan_a_trip_to_mars import scenarios
 

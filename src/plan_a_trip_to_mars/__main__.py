@@ -2,6 +2,7 @@
 
 from plan_a_trip_to_mars import __version__
 
+
 def main() -> None:
     """Do something clever."""
     print("Hello, World!")

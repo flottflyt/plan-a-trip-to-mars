@@ -3,6 +3,7 @@
 Class from https://stackoverflow.com/questions/9401658/how-to-animate-a-scatter-plot,
 modified to accept input.
 """
+
 from itertools import cycle
 from typing import Union
 

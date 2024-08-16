@@ -2,7 +2,6 @@
 
 import os
 from abc import ABC, abstractmethod
-from itertools import cycle
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -88,7 +87,6 @@ class BigScenario(ABC):
 
 
 class Simpl(BigScenario):
-
     SIZE = 3e3
     TOT_TIME = 50 * 60 * 24
     TIME_SCALE = 60
@@ -106,7 +104,6 @@ class Simpl(BigScenario):
 
 
 class Mayhem(BigScenario):
-
     TOT_TIME = 3e4
     SIZE = 5 * cf.AU
 
@@ -146,7 +143,6 @@ class Mayhem(BigScenario):
 
 
 class Jerk(BigScenario):
-
     TOT_TIME = 1e3
     SIZE = 5e3
     FPS = 1

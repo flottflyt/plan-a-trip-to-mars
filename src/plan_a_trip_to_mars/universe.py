@@ -1,5 +1,4 @@
-"""This script implements classes for objects that can move in a 2D space.
-"""
+"""This script implements classes for objects that can move in a 2D space."""
 
 import bisect
 from abc import ABC, abstractmethod
@@ -50,11 +49,11 @@ class Base(ABC):
     def reset_movement(self) -> None:
         self.pos = self.pos_init
         self.vel = self.vel_init * self.spi
-        self.acc = self.acc_init * self.spi ** 2
+        self.acc = self.acc_init * self.spi**2
 
     def move(self):
         self.trace.append(self.pos.as_point)
-        self.vel += self.acc * self.spi ** 2
+        self.vel += self.acc * self.spi**2
         self.pos += self.vel
 
 
@@ -75,7 +74,6 @@ class Static(Base):
 
 
 class Rocket(Flyer):
-
     """Class for a rocket that can manoeuvre using thrusters that give it a kick."""
 
     def __init__(self, *args, **kwargs) -> None:

@@ -14,7 +14,7 @@ dependencies = [
 [project.scripts]
 plan-a-trip-to-mars = "plan_a_trip_to_mars.__main__:main"
 
-[tool.rye]
+[tool.uv]
 dev-dependencies = [
   "ruff>=0.6.1",
   "pre-commit>=3.5.0",

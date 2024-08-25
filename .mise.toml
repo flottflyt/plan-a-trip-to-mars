@@ -1,0 +1,5 @@
+[env]
+'_'.python.venv = { path = ".venv", create = false }
+
+[tasks."simulation:1"]
+run = "uv run ./src/plan_a_trip_to_mars/simulation.py"

@@ -40,7 +40,7 @@ class Base(ABC):
         self.spi: int = 1
         self.name = name
         self.mass = mass
-        self.trace = []
+        self.trace: list[tuple[float, float]] = []
         self.pos_init = pos
         self.vel_init = vel
         self.acc_init = acc

@@ -2,6 +2,7 @@
 
 import os
 from abc import ABC, abstractmethod
+import math
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -27,11 +28,11 @@ class BigScenario(ABC):
 
     def __init__(self) -> None:
         self.my_uni = uni.Universe()
-        self._create_complete_univers()
+        self.create_complete_universe()
         self.__finally()
 
     @abstractmethod
-    def _create_complete_univers(self) -> None:
+    def create_complete_universe(self) -> None:
         """Abstract method that create objects and add them to the universe 'self.my_uni'.
 
         This code is run before the universe is simulated. This means that everything you
@@ -92,7 +93,7 @@ class Simpl(BigScenario):
     TIME_SCALE = 60
     UNIT = " mins"
 
-    def _create_complete_univers(self) -> None:
+    def create_complete_univers(self) -> None:
         """Simplest case."""
         stone = uni.Planet(
             "Stone", 1e14, pos=pre.Vector2D(1e3, -1e3), vel=pre.Vector2D(0, 1.1)
@@ -107,7 +108,7 @@ class Mayhem(BigScenario):
     TOT_TIME = 3e4
     SIZE = 5 * cf.AU
 
-    def _create_complete_univers(self) -> None:
+    def create_complete_univers(self) -> None:
         """Absolute mayhem."""
         self.my_uni.set_spi(3600)
         rockets = ["1", "2", "3", "4", "5"]
@@ -147,7 +148,7 @@ class Jerk(BigScenario):
     SIZE = 5e3
     FPS = 1
 
-    def _create_complete_univers(self) -> None:
+    def create_complete_univers(self) -> None:
         bounce = uni.Rocket("Bounce", 1e3, pos=pre.Vector2D(-1e3, 4e3))
         self.my_uni.add_object(bounce)
         jerks = [

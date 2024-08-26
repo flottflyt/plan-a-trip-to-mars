@@ -19,18 +19,22 @@ AU = 1.495978707e11  # c.au.value
 M_sun = 1.989e30  # c.M_sun.value
 M_earth = 5.972e24  # c.M_earth.value
 M_mars = 0.64171e24
+M_jupiter = 1.8982e27
 M_moon = 0.07346e24
 
-# Raduis of ...
+# Radius of ...
 R_sun = 6.95700e8  # c.R_sun.value
 R_earth = 6.3781e6  # c.R_earth.value
 R_mars = 3396.2e3
+R_jupiter = 71492e3
 R_moon = 1738.1e3
 
 # Distance to the Sun from ...
 D_earth = AU
 D_mars = 1.524 * AU
+D_jupiter = 5.2 * AU
 
 # Mean orbital velocity for ...
 V_earth = 29.78e3
 V_mars = 24.07e3
+V_jupiter = 13.07e3

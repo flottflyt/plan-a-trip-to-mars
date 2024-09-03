@@ -6,22 +6,35 @@ authors = [{ name = "engeir", email = "engeir@pm.me" }]
 license = { file = "LICENSE" }
 requires-python = ">=3.9"
 dependencies = [
-    "matplotlib>=3.7.5",
-    "numpy>=1.24.4",
-    "pyqt6>=6.7.1",
+  "matplotlib>=3.7.5",
+  "numpy>=1.24.4",
+  "pyqt6>=6.7.1",
 ]
 
 [project.scripts]
 plan-a-trip-to-mars = "plan_a_trip_to_mars.__main__:main"
 
-[tool.uv]
-dev-dependencies = [
-  "ruff>=0.6.1",
-  "pre-commit>=3.5.0",
-  "pre-commit-hooks>=4.6.0",
-  "pytest>=8.3.2",
-]
-
 [build-system]
 build-backend = "setuptools.build_meta"
 requires = ["setuptools"]
+
+[tool.pixi.project]
+channels = ["conda-forge"]
+platforms = ["linux-64"]
+
+[tool.pixi.pypi-dependencies]
+plan-a-trip-to-mars = { path = ".", editable = true }
+
+[tool.pixi.tasks]
+
+[tool.pixi.feature.spyder.dependencies]
+spyder-kernels = "==2.5.0"
+spyder = ">=5.5.1,<6"
+[tool.pixi.feature.dev.dependencies]
+ruff = "*"
+pre-commit = "*"
+pre-commit-hooks = "*"
+pytest = "*"
+
+[tool.pixi.environments]
+spyder = ["spyder", "dev"]

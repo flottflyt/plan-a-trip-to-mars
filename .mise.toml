@@ -1,5 +1,6 @@
 [env]
-'_'.python.venv = { path = ".venv", create = false }
+'_'.python.venv = { path = ".pixi/envs/default", create = false }
+UV_PYTHON=".venv"
 
 [tasks."simulation:1"]
 run = "uv run ./src/plan_a_trip_to_mars/simulation.py"

@@ -130,3 +130,6 @@ dmypy.json
 
 # MY ADDITIONS
 data/
+# pixi environments
+.pixi
+*.egg-info

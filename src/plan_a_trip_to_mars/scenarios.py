@@ -26,7 +26,7 @@ class BigScenario(ABC):
     TIME_SCALE = 1
     UNIT = ""
 
-    def __init__(self) -> None:
+    def setup(self) -> None:
         self.my_uni = uni.Universe()
         self.create_complete_universe()
         self.__finally()
@@ -93,7 +93,7 @@ class Simpl(BigScenario):
     TIME_SCALE = 60
     UNIT = " mins"
 
-    def create_complete_univers(self) -> None:
+    def create_complete_universe(self) -> None:
         """Simplest case."""
         stone = uni.Planet(
             "Stone", 1e14, pos=pre.Vector2D(1e3, -1e3), vel=pre.Vector2D(0, 1.1)
@@ -108,7 +108,7 @@ class Mayhem(BigScenario):
     TOT_TIME = 3e4
     SIZE = 5 * cf.AU
 
-    def create_complete_univers(self) -> None:
+    def create_complete_universe(self) -> None:
         """Absolute mayhem."""
         self.my_uni.set_spi(3600)
         rockets = ["1", "2", "3", "4", "5"]
@@ -148,7 +148,7 @@ class Jerk(BigScenario):
     SIZE = 5e3
     FPS = 1
 
-    def create_complete_univers(self) -> None:
+    def create_complete_universe(self) -> None:
         bounce = uni.Rocket("Bounce", 1e3, pos=pre.Vector2D(-1e3, 4e3))
         self.my_uni.add_object(bounce)
         jerks = [

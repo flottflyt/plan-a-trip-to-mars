@@ -2,10 +2,10 @@
 
 from plan_a_trip_to_mars import scenarios
 
-__SCENARIOS__ = {
-    1: scenarios.Simpl,
-    2: scenarios.Mayhem,
-    3: scenarios.Jerk,
+__SCENARIOS__: dict[int, scenarios.BigScenario] = {
+    1: scenarios.Simpl(),
+    2: scenarios.Mayhem(),
+    3: scenarios.Jerk(),
 }
 
 
@@ -16,7 +16,8 @@ class Sim:
         Decide which scenario to run, if and in what format it should be saved and whether
         to show the trace or not.
         """
-        self.scenario = __SCENARIOS__[3]()
+        self.scenario = __SCENARIOS__[3]
+        self.scenario.setup()
         self.save: tuple[bool, str] = (False, "mp4")
         self.trace: bool = False
 

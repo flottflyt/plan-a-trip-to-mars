@@ -31,9 +31,9 @@ confirm that the rocket and Mars move as a pair.
 
 ### 5
 
-If the rocket missed somewhat on the timing of the transfer orbit and is on Mars's orbit,
-but some distance behind, how would you adjust its velocity so that it overtakes Mars?
-Explain.
+If the rocket missed somewhat on the timing of the transfer orbit and is on Mars's
+orbit, but some distance behind, how would you adjust its velocity so that it overtakes
+Mars? Explain.
 
 ### 6
 
@@ -44,51 +44,53 @@ object.
 
 ## Install
 
-### Poetry
+The project is packaged with [Pixi] and [Uv]. Both are available for all three major
+platforms: Linux, OSX and Windows, and you will need to use one of them to install this
+project.
 
-This project is packaged with [Poetry]. Install via their website at
-[https://python-poetry.org/docs/master/#installation](https://python-poetry.org/docs/master/#installation).
+### Pixi
 
-_If_ you cannot get the installation of poetry using the above links to work, a last
-resort is to install from PyPI via `pip`:
+Pixi is similar to anaconda (just younger/more modern) and I have tested that it works
+with for example Spyder.
 
-```bash
-pip install --user poetry
-```
+Install Pixi via their [website](https://pixi.sh/latest/#installation).
+
+### Uv
+
+Uv is a python-only tool for handling your project, and extremely fast.
+
+Install Uv via their [website](https://docs.astral.sh/uv/getting-started/installation/).
 
 ### Package `plan-a-trip-to-mars`
 
-Clone the repository and `cd` into it:
+You will now need to clone the repository and `cd` into it:
 
 ```bash
-git clone <repo-url>
-cd plan-a-trip-to-mars
+git clone repo-url
+cd plan-a-trip-to-mars || exit 1
 ```
 
-Then you can use poetry to install the whole project:
+Now you can install the project with either Pixi or Uv:
 
 ```bash
-poetry install
+# pixi
+pixi install
+# uv
+uv sync
 ```
 
-You will now be able to run the python code! This can be done in two ways; either
-prepend `poetry run` to all commands (this makes sure the python code is run in the
-correct way, in the correct environment):
+## Running the code
+
+You will now be able to run the python code! This can be done in two ways depending on
+if you used Pixi or Uv to install the project.
 
 ```bash
-# Option 1
-poetry run plan-a-trip-to-mars
-poetry run python src/plan_a_trip_to_mars/simulation.py
-```
-
-Alternatively you can start the virtual environment with `poetry shell` and run the
-program like you normally would:
-
-```bash
-# Option 2
-poetry shell
-plan-a-trip-to-mars
-python src/plan_a_trip_to_mars/simulation.py
+# pixi
+pixi run --environment spyder plan-a-trip-to-mars
+pixi run --environment spyder python ./src/plan_a_trip_to_mars/simulation.py
+# uv
+uv run plan-a-trip-to-mars
+uv run python ./src/plan_a_trip_to_mars/simulation.py
 ```
 
 <details>
@@ -96,10 +98,10 @@ python src/plan_a_trip_to_mars/simulation.py
 
 When working on a python project, the best practice is to work inside a virtual
 environment. This can be confusing to begin with, but the pros massively outweighs the
-cons. Many programs exist the creates and manages virtual environments, Poetry will
-actually do this automatically for you!
+cons. Many programs exist the creates and manages virtual environments, and both Pixi
+and Uv will do this automatically for you!
 
-Other good alternatives that makes this easier is [pyenv] and [virtualenvwrapper]. Pick
+Many good alternatives for working with python using virtual environments exist. Pick
 your favourite and learn how to use it.
 
 </details>
@@ -130,6 +132,5 @@ become computationally expensive when you want to simulate a solar system. Setti
 careful to also change the timing of events; the time of a rocket's `kick` is now
 specified in hours.
 
-[poetry]: https://python-poetry.org
-[virtualenvwrapper]: https://virtualenvwrapper.readthedocs.io/en/latest/
-[pyenv]: https://github.com/pyenv/pyenv
+[pixi]: https://pixi.sh/latest/
+[uv]: https://docs.astral.sh/uv/

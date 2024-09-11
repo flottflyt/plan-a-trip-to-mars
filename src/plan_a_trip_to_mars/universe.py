@@ -150,10 +150,10 @@ class Rocket(Flyer):
             try:
                 self.vel.normalized()
             except Exception:
-                dir = pre.Vector2D(1, 0)
+                direction = pre.Vector2D(1, 0)
             else:
-                dir = pre.Vector2D(1, 0) if the_kick[3] else self.vel
-            delV: pre.Vector2D = the_kick[2] * dir.normalized() * self.spi
+                direction = pre.Vector2D(1, 0) if the_kick[3] else self.vel
+            delV: pre.Vector2D = the_kick[2] * direction.normalized() * self.spi
             delV = delV.rotate(the_kick[1])
             self.vel += delV
 

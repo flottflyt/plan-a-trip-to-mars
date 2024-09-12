@@ -1,5 +1,10 @@
 # :rocket: Plan A Trip To Mars :rocket:
 
+> [!DANGER]
+>
+> The code is currently being updated to use the latest python features, including a big
+> refactor of the API.
+
 ![](assets/animation.gif)
 
 ## Problems
@@ -113,6 +118,8 @@ You will now need to clone the repository and `cd` into it. This is done using [
 Alternatively, you can download the repository in a zip-file from GitHub.
 
 ```bash
+git clone https://github.com/flottflyt/plan-a-trip-to-mars.git
+cd plan_a_trip_to_mars || exit 1
 ```
 
 Now you can install the project with either Pixi or Uv:

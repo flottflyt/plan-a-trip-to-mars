@@ -1,23 +1,23 @@
-"""This script implements classes for objects that can move in a 2D space."""
+"""Implementation of classes for objects that can move in a 2D space."""
 
 import bisect
-from abc import ABC, abstractmethod
-from typing import Union
+from abc import abstractmethod
+from typing import Any
 
 import plan_a_trip_to_mars.misc.precode2 as pre
 from plan_a_trip_to_mars.config import G
 
 
-class Base(ABC):
+class Base:
     """Abstract baseclass that every moving object in the universe inherit from."""
 
     def __init__(
         self,
         name: str,
         mass: float,
-        pos: pre.Vector2D = pre.Vector2D(0, 0),
-        vel: pre.Vector2D = pre.Vector2D(0, 0),
-        acc: pre.Vector2D = pre.Vector2D(0, 0),
+        pos: pre.Vector2D | None = None,
+        vel: pre.Vector2D | None = None,
+        acc: pre.Vector2D | None = None,
     ) -> None:
         """Initialise with a starting position and velocity.
 
@@ -41,17 +41,19 @@ class Base(ABC):
         self.name = name
         self.mass = mass
         self.trace: list[tuple[float, float]] = []
-        self.pos_init = pos
-        self.vel_init = vel
-        self.acc_init = acc
+        self.pos_init = pos or pre.Vector2D(0, 0)
+        self.vel_init = vel or pre.Vector2D(0, 0)
+        self.acc_init = acc or pre.Vector2D(0, 0)
         self.reset_movement()
 
     def reset_movement(self) -> None:
+        """Reset the position, velocity and acceleration to the initial values."""
         self.pos = self.pos_init
         self.vel = self.vel_init * self.spi
         self.acc = self.acc_init * self.spi**2
 
-    def move(self):
+    def move(self) -> None:
+        """Move the objects in the universe."""
         self.trace.append(self.pos.as_point)
         self.vel += self.acc * self.spi**2
         self.pos += self.vel
@@ -61,7 +63,7 @@ class Flyer(Base):
     """Baseclass for every moving object to inherit from."""
 
     @abstractmethod
-    def kick():
+    def kick(self, time: float) -> None:
         """Give the object a kick."""
 
 
@@ -76,7 +78,7 @@ class Static(Base):
 class Rocket(Flyer):
     """Class for a rocket that can manoeuvre using thrusters that give it a kick."""
 
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         """Initialise the object with a starting position and velocity.
 
         Parameters
@@ -96,10 +98,10 @@ class Rocket(Flyer):
             The acceleration vector of the object
         """
         Flyer.__init__(self, *args, **kwargs)
-        self.kick_list = []
+        self.kick_list: list[tuple[float, float, int, bool]] = []
 
     def add_kick_event(
-        self, angle: float, speed: float, time: int, static: bool = False
+        self, angle: float, speed: float, time: int, static: bool | None = None
     ) -> None:
         """Add an instant change of the velocity vector at any time during the simulation.
 
@@ -124,11 +126,10 @@ class Rocket(Flyer):
             otherwise, the angle is relative to the velocity of the rocket. Defaults to
             False.
         """
-        if not isinstance(time, int):
-            raise ValueError("'time' must be an int.")
+        static = static if static is not None else False
         bisect.insort(self.kick_list, (time, angle, speed, static))
 
-    def kick(self, time: int) -> None:
+    def kick(self, time: float) -> None:
         """Kicking the rocket object will completely reset its velocity.
 
         No matter what the previous velocity was like, the direction of its velocity will
@@ -149,13 +150,13 @@ class Rocket(Flyer):
             the_kick = self.kick_list.pop(0)
             try:
                 self.vel.normalized()
-            except Exception:
-                direction = pre.Vector2D(1, 0)
+            except ZeroDivisionError:
+                direction: pre.Vector2D = pre.Vector2D(1, 0)
             else:
                 direction = pre.Vector2D(1, 0) if the_kick[3] else self.vel
-            delV: pre.Vector2D = the_kick[2] * direction.normalized() * self.spi
-            delV = delV.rotate(the_kick[1])
-            self.vel += delV
+            delta_v: pre.Vector2D = the_kick[2] * direction.normalized() * self.spi
+            delta_v = delta_v.rotate(the_kick[1])
+            self.vel += delta_v
 
 
 class Planet(Static):
@@ -165,7 +166,7 @@ class Planet(Static):
 class Universe:
     """Class that keeps track of all objects in our universe and calculates their path."""
 
-    def __init__(self, spi=None) -> None:
+    def __init__(self, spi: int | None = None) -> None:
         """Initialise the universe.
 
         We assume that some objects will be included in the universe, and thus create a
@@ -179,7 +180,7 @@ class Universe:
             Set the 'seconds-per-iteration'. Defaults to one. This can also be set at a
             later point using the method 'set_spi()'.
         """
-        self.objects = []
+        self.objects: list[Planet | Rocket] = []
         self.objects_app = self.objects.append
         self.__start: bool = False
         self.__spi: int = 1 if spi is None else spi
@@ -199,7 +200,7 @@ class Universe:
                 "The simulation of the universe already started. Not re-setting the spi."
             )
 
-    def add_object(self, *obj: Union[Planet, Rocket]) -> None:
+    def add_object(self, *obj: Planet | Rocket) -> None:
         """Add any number of objects to the universe as an unordered list of arguments.
 
         Parameters
@@ -221,17 +222,18 @@ class Universe:
         current 'spi' value.
         """
         if not self.objects:
-            raise NotImplementedError(
+            msg = (
                 "You forgot to add/implement any Planet and/or Rocket objects. You can "
-                + "make a planet with the Planet class and a rocket with the Rocket "
-                + "class. Add them to your universe with method `self.add_object()`."
+                "make a planet with the Planet class and a rocket with the Rocket "
+                "class. Add them to your universe with method `self.add_object()`."
             )
+            raise NotImplementedError(msg)
         self.__start = True
         for obj in self.objects:
             obj.spi = self.__spi
             obj.reset_movement()
 
-    def move(self, time):
+    def move(self, time: int) -> None:
         """Update all objects in the universe.
 
         Calling this method moves the universe one time step forward. The position,
@@ -239,9 +241,8 @@ class Universe:
         other objects.
         """
         if not self.__start:
-            raise ValueError(
-                "Please initialise the universe by calling the 'ready()' method."
-            )
+            msg = "Please initialise the universe by calling the 'ready()' method."
+            raise ValueError(msg)
         # We first update the new acceleration of each object based on a snapshot in time
         for obj in self.objects:
             self.__calculate_force(obj)
@@ -253,7 +254,7 @@ class Universe:
             if isinstance(obj, Rocket):
                 obj.kick(time)
 
-    def __calculate_force(self, obj: Union[Planet, Rocket]) -> None:
+    def __calculate_force(self, obj: Planet | Rocket) -> None:
         """Calculate the sum of forces on each object.
 
         Updates the gravitational force a given object feels from all other objects in the
@@ -268,7 +269,7 @@ class Universe:
             Rocket object.
         """
         # Starts with a net force of zero
-        net_force = pre.Vector2D(0, 0)
+        net_force: pre.Vector2D = pre.Vector2D(0, 0)
 
         # The list comprehension picks out all objects from self.objects that is not the
         # one objects we are looking at

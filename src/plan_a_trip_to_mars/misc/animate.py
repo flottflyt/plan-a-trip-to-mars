@@ -5,11 +5,11 @@ modified to accept input.
 """
 
 from itertools import cycle
-from typing import Union
 
-import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib import animation
+from matplotlib.axes import Axes
 
 from plan_a_trip_to_mars.universe import Planet, Rocket
 
@@ -19,13 +19,13 @@ class AnimatedScatter:
 
     def __init__(
         self,
-        objs: list[Union[Planet, Rocket]],
+        objs: list[Planet | Rocket],
         fps: int,
         tot_time: float,
         size: float,
         time_scale: float,
         unit: str,
-    ):
+    ) -> None:
         """Initialise animation of a simulated 2D solar system.
 
         Parameters
@@ -75,8 +75,8 @@ class AnimatedScatter:
             save_count=int(self.tot_time / self.fps),
         )
 
-    def setup_plot(self):
-        """Initial drawing of the scatter plot."""
+    def setup_plot(self) -> list[Axes]:
+        """Make the initial drawing of the scatter plot."""
         # x, y, s, c = next(self.stream).T
         data, _ = next(self.stream)
         x, y, s, c = data.T
@@ -88,7 +88,7 @@ class AnimatedScatter:
         # Draw their trace
         if self.show_trace:
             self.traces = []
-            for j, (x_, y_) in enumerate(zip(x, y)):
+            for j, (x_, y_) in enumerate(zip(x, y, strict=False)):
                 self.traces.append(np.array([x_, y_]))
                 setattr(self, f"line_{j}", self.ax.plot(x_, y_)[0])
         # Add text that display the simulation time
@@ -117,32 +117,30 @@ class AnimatedScatter:
         # Note that it expects a sequence of artists, thus the trailing comma.
         returns = [self.scat]
         if self.show_trace:
-            for j in range(len(x)):
-                returns.append(getattr(self, f"line_{j}"))
+            returns.extend(getattr(self, f"line_{j}") for j in range(len(x)))
         return returns + self.txt
 
-    def prepeare_data(self):
+    def prepeare_data(self) -> None:
         """Prepare data for the data stream.
 
         A list is filled with iterator objects, such that calling next on one of them
         reveal the next point in the trace that should be drawn on screen.
         """
-        self.p_list = []
-        for obj in self.points:
-            self.p_list.append(cycle(obj.trace))
+        self.p_list: list[cycle[tuple[float, float]]] = []
+        self.p_list.extend(cycle(obj.trace) for obj in self.points)
 
-    def data_stream(self):
-        s, c = np.random.random((self.num_objs, 2)).T
+    def data_stream(self) -> np.ndarray:
+        """Create the data stream that should be animated."""
+        s, c = np.random.default_rng().random((self.num_objs, 2)).T
         while True:
             xy = np.array([next(pair) for pair in self.p_list])
             s = 0.1 * np.ones_like(xy[:, 0])
-            c += 0.02 * (np.random.random(self.num_objs) - 0.5)
+            c += 0.02 * (np.random.default_rng().random(self.num_objs) - 0.5)
             yield np.c_[xy[:, 0], xy[:, 1], s, c], next(self.num_pts)
 
-    def update(self, i):
+    def update(self, i: int) -> list[Axes]:
         """Update the scatter plot."""
         data, idx = next(self.stream)
-
         # Set x and y data ...
         self.scat.set_offsets(data[:, :2])
         # Set sizes ...
@@ -154,16 +152,20 @@ class AnimatedScatter:
             # If we are back to the first time step, re-set the trace list.
             if idx == 0:
                 self.traces = []
-                for j, (x_, y_) in enumerate(zip(data[:, 0], data[:, 1])):
-                    self.traces.append(np.array([x_, y_]))
+                self.traces.extend(
+                    np.array([x_, y_])
+                    for x_, y_ in zip(data[:, 0], data[:, 1], strict=False)
+                )
             # Otherwise, append the new positions to the trace.
             else:
-                for j, (t, (x_, y_)) in enumerate(zip(self.traces, data[:, :2])):
+                for j, (t, (x_, y_)) in enumerate(
+                    zip(self.traces, data[:, :2], strict=False)
+                ):
                     self.traces[j] = np.c_[t, np.array([x_, y_])]
                     line = getattr(self, f"line_{j}")
                     line.set_data(self.traces[j][0, :], self.traces[j][1, :])
         # Set text position and update simulation time ...
-        for txt, x, y in zip(self.txt[1:], data[:, 0], data[:, 1]):
+        for txt, x, y in zip(self.txt[1:], data[:, 0], data[:, 1], strict=False):
             txt.set_position((x, y))
         self.txt[0].set_text(f"Time = {int(idx / self.time_scale)}{self.unit}")
 
@@ -173,6 +175,5 @@ class AnimatedScatter:
         # return [self.scat,]
         returns = [self.scat]
         if self.show_trace:
-            for j in range(len(self.points)):
-                returns.append(getattr(self, f"line_{j}"))
+            returns.extend(getattr(self, f"line_{j}") for j in range(len(self.points)))
         return returns + self.txt

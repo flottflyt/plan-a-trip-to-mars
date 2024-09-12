@@ -1,7 +1,3 @@
-[env]
-'_'.python.venv = { path = ".pixi/envs/default", create = false }
-UV_PYTHON=".venv"
-
-[tasks."simulation"]
-run = "uv run ./src/plan_a_trip_to_mars/simulation.py"
-alias = "sim"
+# [env]
+# '_'.python.venv = { path = ".pixi/envs/default", create = false }
+# UV_PYTHON=".venv"

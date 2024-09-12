@@ -1,8 +1,8 @@
 """Scenarios to run in the simulation class."""
 
-import os
-from abc import ABC, abstractmethod
 import math
+import pathlib
+from abc import ABC, abstractmethod
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -27,6 +27,7 @@ class BigScenario(ABC):
     UNIT = ""
 
     def setup(self) -> None:
+        """Set up the simulation scenario."""
         self.my_uni = uni.Universe()
         self.create_complete_universe()
         self.__finally()
@@ -47,15 +48,16 @@ class BigScenario(ABC):
         """
 
     def __finally(self) -> None:
-        """Method that locks the universe for further changes."""
+        """Lock the universe for further changes."""
         self.my_uni.ready()
 
     def run_simulation(self) -> None:
+        """Start running the simulation."""
         for time in range(int(self.TOT_TIME)):
             self.my_uni.move(time)
-            self._run_simulation(time)
+            self.do_at_each_time_step(time)
 
-    def _run_simulation(self, time: int) -> None:
+    def do_at_each_time_step(self, time: int) -> None:
         """Any logic that should be done every time step of the simulation.
 
         This is called at each time step of the simulation. This means that everything
@@ -64,7 +66,7 @@ class BigScenario(ABC):
         the answer from the simulation must be implemented here.
         """
 
-    def play_animation(self, save: tuple[bool, str], trace: bool) -> None:
+    def play_animation(self, save: tuple[bool, str], *, trace: bool) -> None:
         """Re-create the simulation by animating the trace of the objects."""
         # Now that the for loop is finished, the whole simulation is also finished. But
         # instead of animating every step, let us speed things up by keeping only every
@@ -82,8 +84,9 @@ class BigScenario(ABC):
         )
         a.show_trace = trace
         if save[0]:
-            os.makedirs("data", exist_ok=True)
-            a.ani.save(f"data/animation.{save[1]}", fps=48)
+            data_path = pathlib.Path("data")
+            data_path.mkdir(parents=True)
+            a.ani.save(data_path / f"animation.{save[1]}", fps=48)
         plt.show()
 
 
@@ -113,7 +116,7 @@ class Mayhem(BigScenario):
         self.my_uni.set_spi(3600)
         rockets = ["1", "2", "3", "4", "5"]
         m = 1e30
-        origo = pre.Vector2D(0, -4 * cf.AU)
+        origo: pre.Vector2D = pre.Vector2D(0, -4 * cf.AU)
 
         # If we wanted to to add a lot of kick events...
         poss = [
@@ -130,7 +133,9 @@ class Mayhem(BigScenario):
             pre.Vector2D(0, cf.V_earth).rotate(10),
             pre.Vector2D(0, cf.V_earth),
         ]
-        objs = [uni.Rocket(n, m, p, v) for n, p, v in zip(rockets, poss, vels)]
+        objs = [
+            uni.Rocket(n, m, p, v) for n, p, v in zip(rockets, poss, vels, strict=False)
+        ]
         self.my_uni.add_object(*objs)
         angle = [180, 277, 10, 200, 55, 170, 234, 62, 300, 340, 340, 180]
         velocities = (
@@ -179,7 +184,7 @@ class Jerk(BigScenario):
         for j in jerks:
             bounce.add_kick_event(*j)
 
-    def _run_simulation(self, time: int) -> None:
+    def do_at_each_time_step(self, time: int) -> None:
         # Print velocity every 10 time units
         if not time % 10:
             print(abs(self.my_uni.objects[0].vel))

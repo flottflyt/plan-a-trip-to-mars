@@ -1,39 +1,41 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = ["setuptools"]
+
 [project]
 name = "plan-a-trip-to-mars"
 version = "0.1.1"
 description = ""
 authors = [{ name = "engeir", email = "engeir@pm.me" }]
 license = { file = "LICENSE" }
-requires-python = ">=3.9"
-dependencies = [
-  "matplotlib>=3.7.5",
-  "numpy>=1.24.4",
-  "pyqt6>=6.7.1",
-]
+requires-python = ">=3.12"
+dependencies = ["matplotlib>=3.9.2", "numpy>=2.1.1", "pyqt6>=6.7.1"]
 
 [project.scripts]
 plan-a-trip-to-mars = "plan_a_trip_to_mars.__main__:main"
+simulation = "plan_a_trip_to_mars.simulation:main"
 
 [tool.uv]
 dev-dependencies = [
-  "ruff>=0.6.1",
+  "ruff>=0.6.4",
   "pre-commit>=3.5.0",
   "pre-commit-hooks>=4.6.0",
   "pytest>=8.3.2",
+  "mypy>=1.11.2",
 ]
-
-[build-system]
-build-backend = "setuptools.build_meta"
-requires = ["setuptools"]
 
 [tool.pixi.project]
 channels = ["conda-forge"]
-platforms = ["linux-64"]
+platforms = ["win-64", "linux-64", "osx-64", "osx-arm64"]
 
 [tool.pixi.pypi-dependencies]
 plan-a-trip-to-mars = { path = ".", editable = true }
 
 [tool.pixi.tasks]
+hello = { cmd = "plan-a-trip-to-mars" }
+simulation = { cmd = "python ./src/plan_a_trip_to_mars/simulation.py" }
+[tool.pixi.feature.spyder.tasks]
+spyder = { cmd = "spyder" }
 
 [tool.pixi.feature.spyder.dependencies]
 spyder-kernels = "==2.5.0"
@@ -46,3 +48,135 @@ pytest = "*"
 
 [tool.pixi.environments]
 spyder = ["spyder", "dev"]
+
+[tool.isort]
+combine_as_imports = true
+force_grid_wrap = 0
+include_trailing_comma = true
+line_length = 88
+multi_line_output = 3
+profile = "black"
+use_parentheses = true
+
+[tool.mypy]
+enable_incomplete_feature = ["NewGenericSyntax"]
+allow_redefinition = false
+check_untyped_defs = true
+disallow_untyped_calls = false
+files = ["src", "tests"]
+ignore_errors = false
+ignore_missing_imports = true
+implicit_reexport = false
+local_partial_types = true
+no_implicit_optional = true
+strict_equality = true
+strict_optional = true
+warn_no_return = true
+warn_redundant_casts = true
+warn_unreachable = true
+warn_unused_configs = true
+warn_unused_ignores = true
+
+[tool.pydocstringformatter]
+numpydoc-section-hyphen-length = true
+split-summary-body = false
+strip-whitespaces = true
+style = ["pep257", "numpydoc"]
+write = true
+
+[tool.ruff]
+# Exclude a variety of commonly ignored directories.
+exclude = [
+  "*.pyi",
+  ".bzr",
+  ".direnv",
+  ".eggs",
+  ".git",
+  ".git-rewrite",
+  ".hg",
+  ".mypy_cache",
+  ".nox",
+  ".pants.d",
+  ".pytype",
+  ".ruff_cache",
+  ".svn",
+  ".tox",
+  ".venv",
+  "__pypackages__",
+  "_build",
+  "buck-out",
+  "build",
+  "dist",
+  "node_modules",
+  "venv",
+]
+# Files that were downloaded
+extend-exclude = []
+# Same as Black.
+line-length = 88
+# Assume Python 3.12
+target-version = "py312"
+
+[tool.ruff.format]
+preview = false
+docstring-code-format = true
+docstring-code-line-length = 88
+
+[tool.ruff.lint]
+preview = false
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+# Allow fix for all enabled rules (when `--fix`) is provided.
+fixable = ["ALL"]
+# Enable Pyflakes (`F`) and a subset of the pycodestyle (`E`)  codes by default.
+# Unlike Flake8, Ruff doesn't enable pycodestyle warnings (`W`) or
+# McCabe complexity (`C901`) by default.
+# select = ["E4", "E7", "E9", "F"]  # These are the default
+# https://docs.astral.sh/ruff/formatter/#conflicting-lint-rules
+ignore = [
+  "CPY001",
+  "COM812",
+  "E501",   # Line too long
+  "ERA001", # Uncommented code
+  "ISC001",
+  "T201",   # `print` found
+]
+per-file-ignores = {}
+select = [
+  "ALL",
+  # https://docs.astral.sh/ruff/rules/
+]
+unfixable = []
+
+[tool.ruff.lint.flake8-import-conventions]
+
+[tool.ruff.lint.flake8-import-conventions.aliases]
+# Declare the default aliases.
+"matplotlib.pyplot" = "plt"
+numpy = "np"
+scipy = "sp"
+xarray = "xr"
+
+[tool.ruff.lint.flake8-quotes]
+docstring-quotes = "double"
+
+[tool.ruff.lint.isort]
+case-sensitive = true
+known-local-folder = ["src"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+ignore-decorators = ["typing.overload"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pyright]
+exclude = [".venv"]
+venvPath = "."
+venv = ".venv"
+
+[tool.basedpyright]
+exclude = [".venv"]
+venvPath = "."
+venv = ".venv"

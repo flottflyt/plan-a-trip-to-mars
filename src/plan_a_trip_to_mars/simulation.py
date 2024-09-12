@@ -27,7 +27,7 @@ class Sim:
 
     def play_animation(self) -> None:
         """Re-create the simulation by animating the trace of the objects."""
-        self.scenario.play_animation(self.save, self.trace)
+        self.scenario.play_animation(self.save, trace=self.trace)
 
 
 def main():

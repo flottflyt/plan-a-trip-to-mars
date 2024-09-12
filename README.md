@@ -56,9 +56,9 @@ and Mars are aligned with the Sun.
 
 > [!TIP]
 >
-> The base class `BigScenario` has a method named `_run_simulation()`. You may make use
+> The base class `BigScenario` has a method named `do_at_each_time_step()`. You may make use
 > of this in order to get an estimate of the opposition time. Think about where the
-> `_run_simulation()` method should be implemented. Is it used by any other scenario
+> `do_at_each_time_step()` method should be implemented. Is it used by any other scenario
 > class?
 
 ### 6: Calculate delta v

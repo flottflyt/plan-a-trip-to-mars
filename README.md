@@ -1,6 +1,6 @@
 # :rocket: Plan A Trip To Mars :rocket:
 
-> [!DANGER]
+> [!CAUTION]
 >
 > The code is currently being updated to use the latest python features, including a big
 > refactor of the API.

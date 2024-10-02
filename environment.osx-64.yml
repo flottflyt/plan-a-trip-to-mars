@@ -1,0 +1,11 @@
+name: default
+channels:
+- conda-forge
+dependencies:
+- python >=3.12
+- pip
+- pip:
+  - -e .
+  - matplotlib>=3.9.2
+  - numpy>=2.1.1
+  - pyqt6>=6.7.1

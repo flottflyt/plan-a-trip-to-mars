@@ -9,7 +9,11 @@ description = ""
 authors = [{ name = "engeir", email = "engeir@pm.me" }]
 license = { file = "LICENSE" }
 requires-python = ">=3.12"
-dependencies = ["matplotlib>=3.9.2", "numpy>=2.1.1", "pyqt6>=6.7.1"]
+dependencies = [
+    "matplotlib>=3.9.2",
+    "numpy>=2.1.1",
+    "pyqt6>=6.7.1",
+]
 
 [project.scripts]
 plan-a-trip-to-mars = "plan_a_trip_to_mars.__main__:main"

@@ -1,3 +1,14 @@
 # [env]
 # '_'.python.venv = { path = ".pixi/envs/default", create = false }
 # UV_PYTHON=".venv"
+
+[tasks."conda:export"]
+depends = ["conda:export:*"]
+[tasks."conda:export:win-64"]
+run = "pixi project export conda-environment -p win-64 environment.win-64.yml"
+[tasks."conda:export:linux-64"]
+run = "pixi project export conda-environment -p linux-64 environment.linux-64.yml"
+[tasks."conda:export:osx-64"]
+run = "pixi project export conda-environment -p osx-64 environment.osx-64.yml"
+[tasks."conda:export:osx-arm64"]
+run = "pixi project export conda-environment -p osx-arm64 environment.osx-arm64.yml"

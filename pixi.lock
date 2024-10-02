@@ -7925,7 +7925,7 @@ packages:
   name: plan-a-trip-to-mars
   version: 0.1.1
   path: .
-  sha256: 612687b679ddca9c41e1de44cdcdae9350ffe59948ee3aeaaa834b797ae854df
+  sha256: f47afb1b931f4f1b3ada730d788840d901dd7a5c1ba6c3caeedc976589827ff8
   requires_dist:
   - matplotlib>=3.9.2
   - numpy>=2.1.1

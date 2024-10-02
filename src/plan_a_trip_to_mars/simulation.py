@@ -6,16 +6,20 @@ __SCENARIOS__: dict[int, scenarios.BigScenario] = {
     1: scenarios.Simpl(),
     2: scenarios.Mayhem(),
     3: scenarios.Jerk(),
+    4: scenarios.MarsTransfer(),
+    5: scenarios.Parabolic(),
+    6: scenarios.Tadpole(),
 }
 
 
 class Sim:
-    def __init__(self) -> None:
-        """Initialise the simulation setup.
+    """Simulate a 2D universe.
 
-        Decide which scenario to run, if and in what format it should be saved and whether
-        to show the trace or not.
-        """
+    Decide which scenario to run, if and in what format it should be saved and whether
+    to show the trace or not.
+    """
+
+    def __init__(self) -> None:
         self.scenario = __SCENARIOS__[3]
         self.scenario.setup()
         self.save: tuple[bool, str] = (False, "mp4")

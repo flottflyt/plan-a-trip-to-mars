@@ -6,7 +6,6 @@ Those values that are not present in the `astropy` library are found at:
     https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
 """
 
-
 # PHYSICAL CONSTANTS
 
 # Gravitational constant

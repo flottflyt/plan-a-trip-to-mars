@@ -1,11 +1,47 @@
 """Implementation of classes for objects that can move in a 2D space."""
 
-import bisect
 from abc import abstractmethod
+from dataclasses import dataclass
 from typing import Any
 
 import plan_a_trip_to_mars.misc.precode2 as pre
 from plan_a_trip_to_mars.config import G
+
+
+@dataclass
+class Kicker:
+    """Container object for a kick given to a flyer object.
+
+    By default, the angle refers to the current velocity of the rocket. If, however, the
+    velocity of the rocket is zero, so that it cannot be normalised, the direction is
+    re-set to the default direction towards east / right, and angle will describe the
+    angle on a typical unit circle. This behaviour can also be accomplished by setting
+    `static` to True (referring to a static coordinate system).
+
+    Parameters
+    ----------
+    angle: int (degrees)
+        The angle that the velocity vector should be rotated in degrees. Positive
+        values rotate the vector to the left, negative to the right, just at you
+        would expect from the right hand rule.
+    speed: float
+        The change in speed from the current speed (delta V)
+    time: int
+        The simulation time when the kick should be applied.
+    multiply : bool
+        If the current speed should be multiplied by the speed provided, or added.
+        Default is to add.
+    static: bool, optional
+        If the angle is with respect to the universe grid, set static to True,
+        otherwise, the angle is relative to the velocity of the rocket. Defaults to
+        False.
+    """
+
+    angle: float
+    speed: float
+    time: int
+    multiply: bool = False
+    static: bool = False
 
 
 class Base:
@@ -98,36 +134,27 @@ class Rocket(Flyer):
             The acceleration vector of the object
         """
         Flyer.__init__(self, *args, **kwargs)
-        self.kick_list: list[tuple[float, float, int, bool]] = []
+        self.kick_list: list[Kicker] = []
 
-    def add_kick_event(
-        self, angle: float, speed: float, time: int, static: bool | None = None
-    ) -> None:
+    def add_kick_event(self, *kick: Kicker) -> None:
         """Add an instant change of the velocity vector at any time during the simulation.
-
-        By default, the angle refers to the current velocity of the rocket. If, however,
-        the velocity of the rocket is zero, so that it cannot be normalised, the direction
-        is re-set to the default direction towards east / right, and angle will describe
-        the angle on a typical unit circle. This behaviour can also be accomplished by
-        setting `static` to True (referring to a static coordinate system).
 
         Parameters
         ----------
-        angle: int (degrees)
-            The angle that the velocity vector should be rotated in degrees. Positive
-            values rotate the vector to the left, negative to the right, just at you
-            would expect from the right hand rule.
-        speed: float
-            The change in speed from the current speed (delta V)
-        time: int
-            The simulation time when the kick should be applied.
-        static: bool, optional
-            If the angle is with respect to the universe grid, set static to True,
-            otherwise, the angle is relative to the velocity of the rocket. Defaults to
-            False.
+        *kick : Kicker
+            Any number of Kicker container objects.
         """
-        static = static if static is not None else False
-        bisect.insort(self.kick_list, (time, angle, speed, static))
+        seen = {k.time for k in self.kick_list}
+        unique = []
+        for obj in kick:
+            if obj.time not in seen:
+                unique.append(obj)
+                seen.add(obj.time)
+            else:
+                print(
+                    f"WARNING: Several kick events cannot be set to the same time. Skipping the event {obj}."
+                )
+        self.kick_list = self.kick_list + unique
 
     def kick(self, time: float) -> None:
         """Kicking the rocket object will completely reset its velocity.
@@ -143,7 +170,7 @@ class Rocket(Flyer):
         """
         if len(self.kick_list) == 0:
             pass
-        elif time == self.kick_list[0][0]:
+        elif time == self.kick_list[0].time:
             # pop removes the last element of the list and returns it. Giving the 0
             # argument (or in general any int 'n') removes the 0-th (n-th) element and
             # returns it.
@@ -153,10 +180,16 @@ class Rocket(Flyer):
             except ZeroDivisionError:
                 direction: pre.Vector2D = pre.Vector2D(1, 0)
             else:
-                direction = pre.Vector2D(1, 0) if the_kick[3] else self.vel
-            delta_v: pre.Vector2D = the_kick[2] * direction.normalized() * self.spi
-            delta_v = delta_v.rotate(the_kick[1])
-            self.vel += delta_v
+                direction = pre.Vector2D(1, 0) if the_kick.static else self.vel
+            if the_kick.multiply:
+                delta_v = direction.normalized() * self.spi
+                delta_v = delta_v.rotate(the_kick.angle)
+                self.vel = self.vel.rotate(the_kick.angle)
+                self.vel *= the_kick.speed
+            else:
+                delta_v = the_kick.speed * direction.normalized() * self.spi
+                delta_v = delta_v.rotate(the_kick.angle)
+                self.vel += delta_v
 
 
 class Planet(Static):
@@ -182,8 +215,8 @@ class Universe:
         """
         self.objects: list[Planet | Rocket] = []
         self.objects_app = self.objects.append
-        self.__start: bool = False
-        self.__spi: int = 1 if spi is None else spi
+        self._start: bool = False
+        self._spi: int = 1 if spi is None else spi
 
     def set_spi(self, spi: int) -> None:
         """Set the 'seconds-per-iteration' value.
@@ -193,8 +226,8 @@ class Universe:
         spi: int
             Decide how many seconds passes per iteration.
         """
-        if not self.__start:
-            self.__spi = spi
+        if not self._start:
+            self._spi = spi
         else:
             print(
                 "The simulation of the universe already started. Not re-setting the spi."
@@ -209,7 +242,7 @@ class Universe:
             Adds the object to the list of object. Can be either a Planet object or a
             Rocket object.
         """
-        if not self.__start:
+        if not self._start:
             for o in obj:
                 self.objects_app(o)
         else:
@@ -218,7 +251,7 @@ class Universe:
     def ready(self) -> None:
         """Let the universe know you are done modifying it, and ready to simulate.
 
-        Sets the hidden attribute __start to True and updates all objects with the
+        Sets the hidden attribute _start to True and updates all objects with the
         current 'spi' value.
         """
         if not self.objects:
@@ -228,9 +261,9 @@ class Universe:
                 "class. Add them to your universe with method `self.add_object()`."
             )
             raise NotImplementedError(msg)
-        self.__start = True
+        self._start = True
         for obj in self.objects:
-            obj.spi = self.__spi
+            obj.spi = self._spi
             obj.reset_movement()
 
     def move(self, time: int) -> None:
@@ -240,7 +273,7 @@ class Universe:
         velocity and acceleration vectors of each object are updated depending on all
         other objects.
         """
-        if not self.__start:
+        if not self._start:
             msg = "Please initialise the universe by calling the 'ready()' method."
             raise ValueError(msg)
         # We first update the new acceleration of each object based on a snapshot in time

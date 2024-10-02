@@ -157,32 +157,31 @@ class Jerk(BigScenario):
         bounce = uni.Rocket("Bounce", 1e3, pos=pre.Vector2D(-1e3, 4e3))
         self.my_uni.add_object(bounce)
         jerks = [
-            (45, 10, 100, True),
-            (180, 10, 200, False),  # (225, 10, 200, True) would give the same result
-            (-45, 10, 300, True),
-            (-90, 10, 350, True),
-            (-100, 10, 370, True),
-            (-110, 10, 390, True),
-            (-120, 10, 410, True),
-            (-130, 10, 430, True),
-            (-140, 10, 450, True),
-            (-150, 10, 470, True),
-            (-160, 10, 490, True),
-            (-170, 10, 510, True),
-            (180, 100, 530, False),
-            (180, 17.394, 730, False),
-            (-40, 50, 800, True),
-            (180, 50, 840, False),
-            (110, 50, 841, True),
-            (180, 50, 880, False),
-            (250, 50, 881, True),
-            (180, 50, 920, False),
-            (40, 50, 921, True),
-            (180, 50, 960, False),
-            (180, 50, 961, True),
+            uni.Kicker(angle=45, speed=10, time=100, static=True),
+            uni.Kicker(180, 10, 200, static=False),
+            uni.Kicker(-45, 10, 300, static=True),
+            uni.Kicker(-90, 10, 350, static=True),
+            uni.Kicker(-100, 10, 370, static=True),
+            uni.Kicker(-110, 10, 390, static=True),
+            uni.Kicker(-120, 10, 410, static=True),
+            uni.Kicker(-130, 10, 430, static=True),
+            uni.Kicker(-140, 10, 450, static=True),
+            uni.Kicker(-150, 10, 470, static=True),
+            uni.Kicker(-160, 10, 490, static=True),
+            uni.Kicker(-170, 10, 510, static=True),
+            uni.Kicker(180, 100, 530, static=False),
+            uni.Kicker(180, 17.394, 730, static=False),
+            uni.Kicker(-40, 50, 800, static=True),
+            uni.Kicker(180, 50, 840, static=False),
+            uni.Kicker(110, 50, 841, static=True),
+            uni.Kicker(180, 50, 880, static=False),
+            uni.Kicker(250, 50, 881, static=True),
+            uni.Kicker(180, 50, 920, static=False),
+            uni.Kicker(40, 50, 921, static=True),
+            uni.Kicker(180, 50, 960, static=False),
+            uni.Kicker(180, 50, 961, static=True),
         ]
-        for j in jerks:
-            bounce.add_kick_event(*j)
+        bounce.add_kick_event(*jerks)
 
     def do_at_each_time_step(self, time: int) -> None:
         # Print velocity every 10 time units

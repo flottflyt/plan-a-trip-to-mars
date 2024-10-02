@@ -20,5 +20,4 @@ jobs:
           uv sync
       - name: Run test suite
         run: |
-          source "$HOME/.rye/env"
           uv run pytest

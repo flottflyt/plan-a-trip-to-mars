@@ -89,4 +89,4 @@ jobs:
           environment-file: ${{ steps.install_conda.outputs.ENV_FILE }}
       - name: Run an example
         run: |
-          conda run -n base plan-a-trip-to-mars
+          conda run -n test plan-a-trip-to-mars

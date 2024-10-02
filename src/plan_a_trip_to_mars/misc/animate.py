@@ -4,51 +4,74 @@ Class from https://stackoverflow.com/questions/9401658/how-to-animate-a-scatter-
 modified to accept input.
 """
 
+from collections.abc import Generator
+from dataclasses import dataclass
 from itertools import cycle
 
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import animation
-from matplotlib.axes import Axes
+from matplotlib.collections import PathCollection
+from matplotlib.text import Text
 
+import plan_a_trip_to_mars.config as cf
 from plan_a_trip_to_mars.universe import Planet, Rocket
 
 
+@dataclass
+class SimulationConstants:
+    """Container for all constants needed during simulation.
+
+    All times are with respect to seconds.
+
+    Attributes
+    ----------
+    size : float
+        The width and height of the universe.
+    fps : int
+        The number of frames-per-second. Useful to speed up the simulation.
+    total_time : float
+        The total time the simulation should run.
+    time_scale : float
+        Scale the time so that it is presented in a different unit, for example going
+        from seconds to days would be `3600 * 24`.
+    unit : str
+        The time unit, for example year, second, day, etc.
+    """
+
+    size: float = 3 * cf.AU
+    fps: int = 24
+    total_time: float = 5e4
+    time_scale: float = 1
+    unit: str = ""
+
+
 class AnimatedScatter:
-    """An animated scatter plot using matplotlib.animations.FuncAnimation."""
+    """An animated scatter plot using matplotlib.animations.FuncAnimation.
+
+    Parameters
+    ----------
+    objs : list[Planet | Rocket]
+        List of Planets and/or Rockets.
+    simulation_constants : SimulationConstants
+    """
 
     def __init__(
         self,
         objs: list[Planet | Rocket],
-        fps: int,
-        tot_time: float,
-        size: float,
-        time_scale: float,
-        unit: str,
+        simulation_constants: SimulationConstants,
+        # fps: int,
+        # tot_time: float,
+        # size: float,
+        # time_scale: float,
+        # unit: str,
     ) -> None:
-        """Initialise animation of a simulated 2D solar system.
-
-        Parameters
-        ----------
-        obj: list[Union[Planet, Rocket]]
-            List of Planets and/or Rockets.
-        fps: int
-            Frames per second
-        size: float
-            The size of the plotting area. The plot is a square, thus size is the length
-            of one side.
-        time_scale: float
-            Divide the time printed in the animation by `time_scale` to get something more
-            readable or meaningful.
-        unit: str
-            Add a trailing string to the time in the animation, e.g. to set the time unit
-            used (s: seconds, h: hour, etc.)
-        """
-        self.fps = fps
-        self.tot_time = tot_time
-        self.size = size
-        self.time_scale = time_scale
-        self.unit = unit
+        self.sim_consts = simulation_constants
+        # self.fps = fps
+        # self.tot_time = tot_time
+        # self.size = size
+        # self.time_scale = time_scale
+        # self.unit = unit
         self.show_trace = False
         self.num_objs = len(objs)
         self.num_pts = cycle(np.arange(len(objs[0].trace)))
@@ -72,10 +95,10 @@ class AnimatedScatter:
             interval=5,
             init_func=self.setup_plot,
             blit=True,
-            save_count=int(self.tot_time / self.fps),
+            save_count=int(self.sim_consts.total_time / self.sim_consts.fps),
         )
 
-    def setup_plot(self) -> list[Axes]:
+    def setup_plot(self) -> list[PathCollection | Text]:
         """Make the initial drawing of the scatter plot."""
         # x, y, s, c = next(self.stream).T
         data, _ = next(self.stream)
@@ -111,14 +134,21 @@ class AnimatedScatter:
             )
             self.txt.append(getattr(self, f"txt_{j}"))
         # Define simulation area
-        self.ax.axis([-self.size, self.size, -self.size, self.size])
+        self.ax.axis(
+            (
+                -self.sim_consts.size,
+                self.sim_consts.size,
+                -self.sim_consts.size,
+                self.sim_consts.size,
+            )
+        )
 
         # For FuncAnimation's sake, we need to return the artist we'll be using
         # Note that it expects a sequence of artists, thus the trailing comma.
         returns = [self.scat]
         if self.show_trace:
             returns.extend(getattr(self, f"line_{j}") for j in range(len(x)))
-        return returns + self.txt
+        return [*returns, *self.txt]
 
     def prepeare_data(self) -> None:
         """Prepare data for the data stream.
@@ -129,7 +159,7 @@ class AnimatedScatter:
         self.p_list: list[cycle[tuple[float, float]]] = []
         self.p_list.extend(cycle(obj.trace) for obj in self.points)
 
-    def data_stream(self) -> np.ndarray:
+    def data_stream(self) -> Generator[tuple[np.ndarray, np.ndarray]]:
         """Create the data stream that should be animated."""
         s, c = np.random.default_rng().random((self.num_objs, 2)).T
         while True:
@@ -138,7 +168,7 @@ class AnimatedScatter:
             c += 0.02 * (np.random.default_rng().random(self.num_objs) - 0.5)
             yield np.c_[xy[:, 0], xy[:, 1], s, c], next(self.num_pts)
 
-    def update(self, i: int) -> list[Axes]:
+    def update(self, _: int) -> list[PathCollection | Text]:
         """Update the scatter plot."""
         data, idx = next(self.stream)
         # Set x and y data ...
@@ -167,7 +197,9 @@ class AnimatedScatter:
         # Set text position and update simulation time ...
         for txt, x, y in zip(self.txt[1:], data[:, 0], data[:, 1], strict=False):
             txt.set_position((x, y))
-        self.txt[0].set_text(f"Time = {int(idx / self.time_scale)}{self.unit}")
+        self.txt[0].set_text(
+            f"Time = {int(idx / self.sim_consts.time_scale)}{self.sim_consts.unit}"
+        )
 
         # We need to return the updated artists for FuncAnimation to draw. Note that it
         # expects a sequence of artists, so if we only had one artist we would add a
@@ -176,4 +208,4 @@ class AnimatedScatter:
         returns = [self.scat]
         if self.show_trace:
             returns.extend(getattr(self, f"line_{j}") for j in range(len(self.points)))
-        return returns + self.txt
+        return [*returns, *self.txt]

@@ -16,12 +16,15 @@ Reraise exception after showing error message.
 Fixed bug in intersect_circle. Updated docstrings to Python standard.
 Improved __mul__. Added some exception handling. Put example code in separate
 function.
-
 """
 
 from __future__ import annotations
 
 from math import cos, hypot, radians, sin
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 
 class ReturnZeroError(ZeroDivisionError):
@@ -110,7 +113,7 @@ class Vector2D[T]:
             msg = f"Right value must be castable to float, was {b}"
             raise ValueError(msg) from e
 
-    def __iter__(self) -> Vector2D:
+    def __iter__(self) -> Iterator:
         """Return a generator function used to iterate over components of vector.
 
         :returns: Iterator over components.

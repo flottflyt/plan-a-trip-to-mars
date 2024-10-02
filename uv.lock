@@ -11,6 +11,18 @@ wheels = [
 ]
 
 [[package]]
+name = "click"
+version = "8.1.7"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "colorama", marker = "platform_system == 'Windows'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/96/d3/f04c7bfcf5c1862a2a5b845c6b2b360488cf47af55dfa79c98f6a6bf98b5/click-8.1.7.tar.gz", hash = "sha256:ca9853ad459e787e2192211578cc907e7594e294c7ccc834310722b41b9ca6de", size = 336121 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/00/2e/d53fa4befbf2cfa713304affc7ca780ce4fc1fd8710527771b58311a3229/click-8.1.7-py3-none-any.whl", hash = "sha256:ae74fb96c20a0277a1d615f1e4d73c8414f5a98db8b799a7931d1582f3390c28", size = 97941 },
+]
+
+[[package]]
 name = "colorama"
 version = "0.4.6"
 source = { registry = "https://pypi.org/simple" }
@@ -74,6 +86,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/c4/91/e2df406fb4efacdf46871c25cde65d3c6ee5e173b7e5a4547a47bae91920/distlib-0.3.8.tar.gz", hash = "sha256:1530ea13e350031b6312d8580ddb6b27a104275a31106523b8f123787f494f64", size = 609931 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/8e/41/9307e4f5f9976bc8b7fea0b66367734e8faf3ec84bc0d412d8cfabbb66cd/distlib-0.3.8-py2.py3-none-any.whl", hash = "sha256:034db59a0b96f8ca18035f36290806a9a6e6bd9d1ff91e45a7f172eb17e51784", size = 468850 },
+]
+
+[[package]]
+name = "docstring-parser-fork"
+version = "0.0.9"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/17/0e/8468b881277ff077e63c57ab5747ca0770bea76e1ca636a9ed45caec2fa7/docstring_parser_fork-0.0.9.tar.gz", hash = "sha256:95b23cc5092af85080c716a6da68360f5ae4fcffa75f4a3aca5e539783cbcc3d", size = 29975 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/79/a9/afc6140d68e260cdcc1214abbe924556cbd1ceaaa5aa7cd3b62eb739e02d/docstring_parser_fork-0.0.9-py3-none-any.whl", hash = "sha256:0be85ad00cb25bf5beeb673e46e777facf0f47552fa3a7570d120ef7e3374401", size = 40302 },
 ]
 
 [[package]]
@@ -317,11 +338,23 @@ dependencies = [
     { name = "pyqt6" },
 ]
 
+[package.optional-dependencies]
+dev = [
+    { name = "pre-commit" },
+    { name = "pre-commit-hooks" },
+    { name = "pydoclint" },
+    { name = "pydocstringformatter" },
+    { name = "pytest" },
+    { name = "ruff" },
+]
+
 [package.dev-dependencies]
 dev = [
     { name = "mypy" },
     { name = "pre-commit" },
     { name = "pre-commit-hooks" },
+    { name = "pydoclint" },
+    { name = "pydocstringformatter" },
     { name = "pytest" },
     { name = "ruff" },
 ]
@@ -330,7 +363,13 @@ dev = [
 requires-dist = [
     { name = "matplotlib", specifier = ">=3.9.2" },
     { name = "numpy", specifier = ">=2.1.1" },
+    { name = "pre-commit", marker = "extra == 'dev'" },
+    { name = "pre-commit-hooks", marker = "extra == 'dev'" },
+    { name = "pydoclint", marker = "extra == 'dev'", specifier = ">=0.5.9,<0.6" },
+    { name = "pydocstringformatter", marker = "extra == 'dev'", specifier = ">=0.7.3,<0.8" },
     { name = "pyqt6", specifier = ">=6.7.1" },
+    { name = "pytest", marker = "extra == 'dev'" },
+    { name = "ruff", marker = "extra == 'dev'" },
 ]
 
 [package.metadata.requires-dev]
@@ -338,6 +377,8 @@ dev = [
     { name = "mypy", specifier = ">=1.11.2" },
     { name = "pre-commit", specifier = ">=3.5.0" },
     { name = "pre-commit-hooks", specifier = ">=4.6.0" },
+    { name = "pydoclint", specifier = ">=0.5.9" },
+    { name = "pydocstringformatter", specifier = ">=0.7.3" },
     { name = "pytest", specifier = ">=8.3.2" },
     { name = "ruff", specifier = ">=0.6.4" },
 ]
@@ -386,6 +427,28 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/83/0d/b4e97cd99b26c0cd8265c9f19ee7e55248142f0c9955e4d119de96fa4a13/pre_commit_hooks-4.6.0.tar.gz", hash = "sha256:eb1f43ee67869cd41b4c59017fad4a0f9d4d61201d163f2135535aaf65035a2b", size = 29579 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/95/d8/d09b270248bc2441f966dd094a3de8ae813112d2687036f621202bdef80b/pre_commit_hooks-4.6.0-py2.py3-none-any.whl", hash = "sha256:a69199e6a2d45ec59c1020a81ca1549abddc2afb798276d9a0d951752d6abbfe", size = 41193 },
+]
+
+[[package]]
+name = "pydoclint"
+version = "0.5.9"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "click" },
+    { name = "docstring-parser-fork" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/f1/59/8969dde565efb8d6ef564907ab5562a49e633451087b5f47de48ffbfe1f4/pydoclint-0.5.9.tar.gz", hash = "sha256:e200f964a5d9fbbb2ff1078bd7cb5433a0564d2482b6a1ba1be848f66bc4924f", size = 48704 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/55/a5/f50c1543bf9213524363a12209a9f39b442ddbca6672f87dd29b1141ec09/pydoclint-0.5.9-py2.py3-none-any.whl", hash = "sha256:089327003cef6fe5605cbaa9887859ea5229ce0c9abb52775ffd57513094c1ae", size = 46037 },
+]
+
+[[package]]
+name = "pydocstringformatter"
+version = "0.7.3"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/b3/51/5c21963eb7bdba245ec808fdb0ef8abc0cd87ef674f2b6ba1fd76f3a0ffa/pydocstringformatter-0.7.3.tar.gz", hash = "sha256:dfcc07bec1706803d563275e282ef9e629b02dc19983ec6778d07a9f500bb62b", size = 24024 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/3a/38/b3a99e9cc66941e044ad3d40e90a72b1191925b8af13e3e4d8edc5c0eb87/pydocstringformatter-0.7.3-py3-none-any.whl", hash = "sha256:3654f52c49fc729b49712d1e7c49384dfd253bdffeda4939e79dab31491c563f", size = 31287 },
 ]
 
 [[package]]

@@ -10,14 +10,24 @@ authors = [{ name = "engeir", email = "engeir@pm.me" }]
 license = { file = "LICENSE" }
 requires-python = ">=3.12"
 dependencies = [
-    "matplotlib>=3.9.2",
-    "numpy>=2.1.1",
-    "pyqt6>=6.7.1",
+  "matplotlib>=3.9.2",
+  "numpy>=2.1.1",
+  "pyqt6>=6.7.1",
 ]
 
 [project.scripts]
 plan-a-trip-to-mars = "plan_a_trip_to_mars.__main__:main"
 simulation = "plan_a_trip_to_mars.simulation:main"
+
+[project.optional-dependencies]
+dev = [
+  "pydoclint>=0.5.9,<0.6",
+  "pydocstringformatter>=0.7.3,<0.8",
+  "ruff",
+  "pytest",
+  "pre-commit",
+  "pre-commit-hooks",
+]
 
 [tool.uv]
 dev-dependencies = [
@@ -26,6 +36,8 @@ dev-dependencies = [
   "pre-commit-hooks>=4.6.0",
   "pytest>=8.3.2",
   "mypy>=1.11.2",
+  "pydocstringformatter>=0.7.3",
+  "pydoclint>=0.5.9",
 ]
 
 [tool.pixi.project]
@@ -42,13 +54,13 @@ simulation = { cmd = "python ./src/plan_a_trip_to_mars/simulation.py" }
 spyder = { cmd = "spyder" }
 
 [tool.pixi.feature.spyder.dependencies]
-spyder-kernels = "==2.5.0"
+spyder-kernels = ">=2.5.2,<3"
 spyder = ">=5.5.1,<6"
 [tool.pixi.feature.dev.dependencies]
-ruff = "*"
-pre-commit = "*"
-pre-commit-hooks = "*"
-pytest = "*"
+ruff = ">=0.6.8,<0.7"
+pre-commit = ">=3.8.0,<4"
+pre-commit-hooks = ">=4.6.0,<5"
+pytest = ">=8.3.3,<9"
 
 [tool.pixi.environments]
 spyder = ["spyder", "dev"]
@@ -140,10 +152,10 @@ fixable = ["ALL"]
 ignore = [
   "CPY001",
   "COM812",
-  "E501",   # Line too long
+  "E501", # Line too long
   "ERA001", # Uncommented code
   "ISC001",
-  "T201",   # `print` found
+  "T201", # `print` found
 ]
 per-file-ignores = {}
 select = [

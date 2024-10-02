@@ -2,7 +2,6 @@
 
 from abc import abstractmethod
 from dataclasses import dataclass
-from typing import Any
 
 import plan_a_trip_to_mars.misc.precode2 as pre
 from plan_a_trip_to_mars.config import G
@@ -18,20 +17,21 @@ class Kicker:
     angle on a typical unit circle. This behaviour can also be accomplished by setting
     `static` to True (referring to a static coordinate system).
 
-    Parameters
+    Attributes
     ----------
-    angle: int (degrees)
-        The angle that the velocity vector should be rotated in degrees. Positive
-        values rotate the vector to the left, negative to the right, just at you
-        would expect from the right hand rule.
-    speed: float
-        The change in speed from the current speed (delta V)
-    time: int
+    angle : float
+        The angle that the velocity vector should be rotated in degrees. Positive values
+        rotate the vector anti-clockwise, negative clockwise, just as you would expect
+        from the right hand rule.
+    speed : float
+        The change in speed from the current speed (delta V). If `multiply` is set to
+        `True`, this will instead scale the current speed.
+    time : int
         The simulation time when the kick should be applied.
     multiply : bool
         If the current speed should be multiplied by the speed provided, or added.
         Default is to add.
-    static: bool, optional
+    static : bool, optional
         If the angle is with respect to the universe grid, set static to True,
         otherwise, the angle is relative to the velocity of the rocket. Defaults to
         False.
@@ -45,7 +45,21 @@ class Kicker:
 
 
 class Base:
-    """Abstract baseclass that every moving object in the universe inherit from."""
+    """Abstract baseclass that every moving object in the universe inherit from.
+
+    Parameters
+    ----------
+    name : str
+        Name the object
+    mass : float
+        Give the object some mass
+    pos : pre.Vector2D | None
+        The position vector of the object with respect to origo (0, 0)
+    vel : pre.Vector2D | None
+        The velocity vector of the object
+    acc : pre.Vector2D | None
+        The acceleration vector of the object
+    """
 
     def __init__(
         self,
@@ -55,24 +69,6 @@ class Base:
         vel: pre.Vector2D | None = None,
         acc: pre.Vector2D | None = None,
     ) -> None:
-        """Initialise with a starting position and velocity.
-
-        Parameters
-        ----------
-        name: str
-            Name the object
-        mass: float
-            Give the object some mass
-
-        Keyword args
-        ------------
-        pos: pre.Vector2D
-            The position vector of the object with respect to origo (0, 0)
-        vel: pre.Vector2D
-            The velocity vector of the object
-        acc: pre.Vector2D
-            The acceleration vector of the object
-        """
         self.spi: int = 1
         self.name = name
         self.mass = mass
@@ -99,7 +95,7 @@ class Flyer(Base):
     """Baseclass for every moving object to inherit from."""
 
     @abstractmethod
-    def kick(self, time: float) -> None:
+    def kick(self, time: int) -> None:
         """Give the object a kick."""
 
 
@@ -112,28 +108,31 @@ class Static(Base):
 
 
 class Rocket(Flyer):
-    """Class for a rocket that can manoeuvre using thrusters that give it a kick."""
+    """Class for a rocket that can manoeuvre using thrusters that give it a kick.
 
-    def __init__(self, *args: Any, **kwargs: Any) -> None:
-        """Initialise the object with a starting position and velocity.
+    Parameters
+    ----------
+    name : str
+        Name the object
+    mass : float
+        Give the object some mass
+    pos : pre.Vector2D | None
+        The position vector of the object with respect to the origin (0, 0)
+    vel : pre.Vector2D | None
+        The velocity vector of the object
+    acc : pre.Vector2D | None
+        The acceleration vector of the object
+    """
 
-        Parameters
-        ----------
-        name: str
-            Name the object
-        mass: float
-            Give the object some mass
-
-        Keyword args
-        ------------
-        pos: pre.Vector2D
-            The position vector of the object with respect to the origin (0, 0)
-        vel: pre.Vector2D
-            The velocity vector of the object
-        acc: pre.Vector2D
-            The acceleration vector of the object
-        """
-        Flyer.__init__(self, *args, **kwargs)
+    def __init__(
+        self,
+        name: str,
+        mass: float,
+        pos: pre.Vector2D | None = None,
+        vel: pre.Vector2D | None = None,
+        acc: pre.Vector2D | None = None,
+    ) -> None:
+        Flyer.__init__(self, name=name, mass=mass, pos=pos, vel=vel, acc=acc)
         self.kick_list: list[Kicker] = []
 
     def add_kick_event(self, *kick: Kicker) -> None:
@@ -156,7 +155,7 @@ class Rocket(Flyer):
                 )
         self.kick_list = self.kick_list + unique
 
-    def kick(self, time: float) -> None:
+    def kick(self, time: int) -> None:
         """Kicking the rocket object will completely reset its velocity.
 
         No matter what the previous velocity was like, the direction of its velocity will
@@ -165,7 +164,7 @@ class Rocket(Flyer):
 
         Parameters
         ----------
-        time: int
+        time : int
             The simulation time at which the kick should take effect.
         """
         if len(self.kick_list) == 0:
@@ -197,22 +196,21 @@ class Planet(Static):
 
 
 class Universe:
-    """Class that keeps track of all objects in our universe and calculates their path."""
+    """Class that keeps track of all objects in our universe and calculates their path.
+
+    We assume that some objects will be included in the universe, and thus create a list
+    to place them in. We also set a boolean to False that makes sure some things cannot
+    be done / can only be done when it is False. For example it would make no sense
+    adding more objects to the universe after the simulation have started.
+
+    Parameters
+    ----------
+    spi : int | None
+        Set the 'seconds-per-iteration'. Defaults to one. This can also be set at a
+        later point using the method 'set_spi()'.
+    """
 
     def __init__(self, spi: int | None = None) -> None:
-        """Initialise the universe.
-
-        We assume that some objects will be included in the universe, and thus create a
-        list to place them in. We also set a boolean to False that makes sure some things
-        cannot be done / can only be done when it is False. For example it would make no
-        sense adding more objects to the universe after the simulation have started.
-
-        Parameters
-        ----------
-        spi: int (optional)
-            Set the 'seconds-per-iteration'. Defaults to one. This can also be set at a
-            later point using the method 'set_spi()'.
-        """
         self.objects: list[Planet | Rocket] = []
         self.objects_app = self.objects.append
         self._start: bool = False
@@ -223,7 +221,7 @@ class Universe:
 
         Parameters
         ----------
-        spi: int
+        spi : int
             Decide how many seconds passes per iteration.
         """
         if not self._start:
@@ -238,7 +236,7 @@ class Universe:
 
         Parameters
         ----------
-        obj: Union[Planet, Rocket]
+        *obj : Planet | Rocket
             Adds the object to the list of object. Can be either a Planet object or a
             Rocket object.
         """
@@ -278,7 +276,7 @@ class Universe:
             raise ValueError(msg)
         # We first update the new acceleration of each object based on a snapshot in time
         for obj in self.objects:
-            self.__calculate_force(obj)
+            self._calculate_force(obj)
 
         # Let us now update the movement of each object with the gravitational pull it
         # gets from all the other objects
@@ -287,7 +285,7 @@ class Universe:
             if isinstance(obj, Rocket):
                 obj.kick(time)
 
-    def __calculate_force(self, obj: Planet | Rocket) -> None:
+    def _calculate_force(self, obj: Planet | Rocket) -> None:
         """Calculate the sum of forces on each object.
 
         Updates the gravitational force a given object feels from all other objects in the
@@ -297,7 +295,7 @@ class Universe:
 
         Parameters
         ----------
-        obj: Union[Planet, Rocket]
+        obj : Planet | Rocket
             Adds the object to the list of object. Can be either a Planet object or a
             Rocket object.
         """

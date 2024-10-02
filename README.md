@@ -1,9 +1,9 @@
 # :rocket: Plan A Trip To Mars :rocket:
 
-> [!CAUTION]
->
-> The code is currently being updated to use the latest python features, including a big
-> refactor of the API.
+![Linux](https://img.shields.io/badge/Linux-%23.svg?logo=linux&color=FCC624&logoColor=black)
+![macOS](https://img.shields.io/badge/macOS-%23.svg?logo=apple&color=000000&logoColor=white)
+![Windows](https://img.shields.io/badge/Windows-%23.svg?logo=windows&color=0078D6&logoColor=white)
+[![Platform installs](https://github.com/flottflyt/plan-a-trip-to-mars/actions/workflows/installs.yml/badge.svg)](https://github.com/flottflyt/plan-a-trip-to-mars/actions/workflows/installs.yml)
 
 ![](assets/animation.gif)
 
@@ -56,10 +56,10 @@ and Mars are aligned with the Sun.
 
 > [!TIP]
 >
-> The base class `BigScenario` has a method named `do_at_each_time_step()`. You may make use
-> of this in order to get an estimate of the opposition time. Think about where the
-> `do_at_each_time_step()` method should be implemented. Is it used by any other scenario
-> class?
+> The base class `BigScenario` has a method named `do_at_each_time_step()`. You may make
+> use of this in order to get an estimate of the opposition time. Think about where the
+> `do_at_each_time_step()` method should be implemented. Is it used by any other
+> scenario class?
 
 ### 6: Calculate delta v
 
@@ -95,9 +95,15 @@ object. Simulate the path it takes.
 
 ## Install
 
-The project is packaged with [Pixi] and [Uv]. Both are available for all three major
-platforms: Linux, OSX and Windows. You will need to use one of them to install this
-project.
+The project is packaged with [Pixi] and [Uv], and additionally solved for [Conda]. All
+three installation alternatives are available for all three major platforms: Linux, OSX
+and Windows. You will need to use one of them to install this project.
+
+### Uv
+
+Uv is a python-only tool for handling your project, and extremely fast.
+
+Install Uv via their [website](https://docs.astral.sh/uv/getting-started/installation/).
 
 ### Pixi
 
@@ -106,11 +112,21 @@ with for example Spyder.
 
 Install Pixi via their [website](https://pixi.sh/latest/#installation).
 
-### Uv
+### Conda
 
-Uv is a python-only tool for handling your project, and extremely fast.
+Conda has been around for a long time and has widespread support. The files that specify
+the environments are generated using Pixi, as
 
-Install Uv via their [website](https://docs.astral.sh/uv/getting-started/installation/).
+```txt
+environment.linux-64.yml
+environment.osx-64.yml
+environment.osx-arm64.yml
+environment.win-64.yml
+```
+
+Visit the Conda
+[website](https://docs.conda.io/projects/conda/en/stable/user-guide/install/index.html)
+for installation instructions.
 
 ### Package `plan-a-trip-to-mars`
 
@@ -122,27 +138,32 @@ git clone https://github.com/flottflyt/plan-a-trip-to-mars.git
 cd plan_a_trip_to_mars || exit 1
 ```
 
-Now you can install the project with either Pixi or Uv:
+Now you can install the project with either Uv, Pixi or Conda:
 
 ```bash
-# pixi
-pixi install
 # uv
 uv sync
+# pixi
+pixi install
+# conda (replace the file name to match your operating system platform)
+conda env create --name name-of-my-env --file environment.linux-64.yml
 ```
 
 ## Running the code
 
-You will now be able to run the python code! This can be done in two ways depending on
-if you used Pixi or Uv to install the project.
+You will now be able to run the python code! This can be done in two ways with slightly
+different syntax depending on if you used Uv, Pixi or Conda to install the project.
 
 ```bash
-# pixi
-pixi run --environment spyder plan-a-trip-to-mars
-pixi run --environment spyder python ./src/plan_a_trip_to_mars/simulation.py
 # uv
 uv run plan-a-trip-to-mars
 uv run python ./src/plan_a_trip_to_mars/simulation.py
+# pixi
+pixi run --environment spyder plan-a-trip-to-mars
+pixi run --environment spyder python ./src/plan_a_trip_to_mars/simulation.py
+# conda
+conda run -n name-of-my-env plan-a-trip-to-mars
+conda run -n name-of-my-env python ./src/plan_a_trip_to_mars/simulation.py
 ```
 
 <details>
@@ -184,6 +205,7 @@ become computationally expensive when you want to simulate a solar system. Setti
 careful to also change the timing of events; the time of a rocket's `kick` is now
 specified in hours.
 
+[conda]: https://docs.conda.io/en/latest/index.html
 [pixi]: https://pixi.sh/latest/
 [uv]: https://docs.astral.sh/uv/
 [git]: https://git-scm.com/

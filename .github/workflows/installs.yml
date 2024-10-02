@@ -1,4 +1,4 @@
-name: Verify platform installation
+name: Platform installs
 on:
   - push
 jobs:

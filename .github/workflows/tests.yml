@@ -1,29 +1,24 @@
 name: PyTest
 on:
   - push
-
 jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
-
       # Setup Python (faster than using Python container)
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
-          python-version: "3.9"
-
+          python-version: "3.12"
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
       - name: Install dependencies
         run: |
-          curl -sSf https://rye.astral.sh/get | RYE_INSTALL_OPTION="--yes" bash
-          source "$HOME/.rye/env"
-          rye sync
-
+          uv sync
       - name: Run test suite
         run: |
           source "$HOME/.rye/env"
-          rye run pytest
+          uv run pytest

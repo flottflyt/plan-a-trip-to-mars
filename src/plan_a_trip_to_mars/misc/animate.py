@@ -60,18 +60,8 @@ class AnimatedScatter:
         self,
         objs: list[Planet | Rocket],
         simulation_constants: SimulationConstants,
-        # fps: int,
-        # tot_time: float,
-        # size: float,
-        # time_scale: float,
-        # unit: str,
     ) -> None:
         self.sim_consts = simulation_constants
-        # self.fps = fps
-        # self.tot_time = tot_time
-        # self.size = size
-        # self.time_scale = time_scale
-        # self.unit = unit
         self.show_trace = False
         self.num_objs = len(objs)
         self.num_pts = cycle(np.arange(len(objs[0].trace)))
@@ -100,13 +90,12 @@ class AnimatedScatter:
 
     def setup_plot(self) -> list[PathCollection | Text]:
         """Make the initial drawing of the scatter plot."""
-        # x, y, s, c = next(self.stream).T
         data, _ = next(self.stream)
         x, y, s, c = data.T
 
         # Draw all objects as a scatter plot
         self.scat = self.ax.scatter(
-            x, y, c=c, s=s, vmin=0, vmax=1, cmap="jet", edgecolor="w"
+            x, y, c=c, s=0, vmin=0, vmax=1, cmap="jet", edgecolor="w"
         )
         # Draw their trace
         if self.show_trace:
@@ -126,13 +115,10 @@ class AnimatedScatter:
             )
         ]
         # Add text that show the name of each object
-        for j, n in enumerate(self.names):
-            setattr(
-                self,
-                f"txt_{j}",
-                self.ax.text(x[j], y[j], n, va="bottom", ha="center", c="w"),
-            )
-            self.txt.append(getattr(self, f"txt_{j}"))
+        self.txt.extend(
+            self.ax.text(x[j], y[j], "", va="bottom", ha="center", c="w")
+            for j, _ in enumerate(self.names)
+        )
         # Define simulation area
         self.ax.axis(
             (
@@ -195,8 +181,11 @@ class AnimatedScatter:
                     line = getattr(self, f"line_{j}")
                     line.set_data(self.traces[j][0, :], self.traces[j][1, :])
         # Set text position and update simulation time ...
-        for txt, x, y in zip(self.txt[1:], data[:, 0], data[:, 1], strict=False):
+        for txt, x, y, n in zip(
+            self.txt[1:], data[:, 0], data[:, 1], self.names, strict=False
+        ):
             txt.set_position((x, y))
+            txt.set_text(n)
         self.txt[0].set_text(
             f"Time = {int(idx / self.sim_consts.time_scale)}{self.sim_consts.unit}"
         )

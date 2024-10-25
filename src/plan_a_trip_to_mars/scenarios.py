@@ -15,7 +15,7 @@ console = Console()
 
 
 class BigScenario(ABC):
-    """Abstract baseclass to create simulation scenarios."""
+    """Abstract base class to create simulation scenarios."""
 
     SIM_CONSTS = ani.SimulationConstants(
         size=3 * cf.AU, fps=24, total_time=5e4, time_scale=1, unit=""
@@ -83,7 +83,7 @@ class BigScenario(ABC):
         plt.show()
 
 
-class Simpl(BigScenario):
+class Simpel(BigScenario):
     """Simulation demonstrating a simple universe with two objects."""
 
     SIM_CONSTS = ani.SimulationConstants(

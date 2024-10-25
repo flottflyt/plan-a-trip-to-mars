@@ -26,15 +26,15 @@ To do this, follow the [installation](#install) instructions below.
 ### 2: Editing the code
 
 Let us try to make a change to the code. Open the file
-`./src/plan_a_trip_to_mars/simulation.py`, and edit it such that the `Jerk` scenario is
-being run.
+`./src/plan_a_trip_to_mars/simulation.py`, and edit it such that the default behaviour
+is to save the animations. This is set in the `__init__` method of the `Sim` class.
 
 ### 3: Creating a new scenario
 
 Open the file `./src/plan_a_trip_to_mars/scenarios.py`. The python class `BigScenario`
-works as a template for all the other classes that _inherit_ it. Using the other classes
-(`Simpl`, `Mayhem` and `Jerk`) as guiding, create a new class for a Mars orbit, for
-example named `MarsTransfer`.
+works as a template or _parent_ for all the other classes that _inherit_ it. Using the
+other classes (`Simpl`, `Mayhem` and `Jerk`) as guiding, create a new class for a Mars
+orbit, for example named `MarsTransfer`.
 
 Figure out which methods (a function tied to a class) are needed for the new
 `MarsTransfer` class to work.

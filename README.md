@@ -166,7 +166,7 @@ conda run -n name-of-my-env plan-a-trip-to-mars
 conda run -n name-of-my-env python ./src/plan_a_trip_to_mars/simulation.py
 ```
 
-> [!TIP] Spyder
+> [!TIP]
 >
 > You can open the project in Spyder by running the following command in a terminal:
 >

@@ -12,7 +12,8 @@ requires-python = ">=3.12"
 dependencies = [
   "matplotlib>=3.9.2",
   "numpy>=2.1.1",
-  "pyqt6>=6.7.1",
+  "returns>=0.23.0,<0.24",
+  "rich>=13.7.1",
 ]
 
 [project.scripts]
@@ -38,6 +39,7 @@ dev-dependencies = [
   "mypy>=1.11.2",
   "pydocstringformatter>=0.7.3",
   "pydoclint>=0.5.9",
+  "pyqt6>=6.7.1",
 ]
 
 [tool.pixi.project]

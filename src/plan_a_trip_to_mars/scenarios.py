@@ -4,11 +4,14 @@ import pathlib
 from abc import ABC, abstractmethod
 
 import matplotlib.pyplot as plt
+from rich.console import Console
 
 import plan_a_trip_to_mars.config as cf
 import plan_a_trip_to_mars.misc.animate as ani
 import plan_a_trip_to_mars.misc.precode2 as pre
 import plan_a_trip_to_mars.universe as uni
+
+console = Console()
 
 
 class BigScenario(ABC):
@@ -69,17 +72,14 @@ class BigScenario(ABC):
         a = ani.AnimatedScatter(
             self.my_uni.objects,
             self.SIM_CONSTS,
-            # self.FPS,
-            # self.TOT_TIME,
-            # self.SIZE,
-            # self.TIME_SCALE,
-            # self.UNIT,
         )
         a.show_trace = trace
         if save[0]:
-            data_path = pathlib.Path("data")
-            data_path.mkdir(parents=True)
-            a.ani.save(data_path / f"animation.{save[1]}", fps=48)
+            name = f"animation.{save[1]}"
+            with console.status(f"[bold yellow]Saving as {name}...", spinner="point"):
+                data_path = pathlib.Path("data")
+                data_path.mkdir(parents=True, exist_ok=True)
+                a.ani.save(data_path / name, fps=48)
         plt.show()
 
 

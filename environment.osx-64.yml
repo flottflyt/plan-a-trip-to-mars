@@ -1,6 +1,7 @@
 name: spyder
 channels:
 - conda-forge
+- nodefaults
 dependencies:
 - spyder-kernels >=2.5.2,<3
 - spyder >=5.5.1,<6
@@ -20,4 +21,5 @@ dependencies:
   - -e .
   - matplotlib>=3.9.2
   - numpy>=2.1.1
-  - pyqt6>=6.7.1
+  - returns>=0.23.0, <0.24
+  - rich>=13.7.1

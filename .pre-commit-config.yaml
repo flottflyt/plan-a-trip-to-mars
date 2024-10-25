@@ -16,32 +16,32 @@ repos:
         additional_dependencies: ["dprint"]
       - id: ruff_format
         name: Ruff format
-        stages: [commit]
+        stages: [pre-commit]
         language: system
         entry: uv run ruff format
         types: [python]
       - id: ruff_lint
         name: Ruff lint
-        stages: [commit]
+        stages: [pre-commit]
         language: system
         entry: uv run ruff check
         types: [python]
       - id: pydocstringformatter
         name: pydocstringformatter
-        stages: [commit]
+        stages: [pre-commit]
         language: system
         entry: uv run pydocstringformatter src tests
         types: [python]
       - id: mypy
         name: mypy
-        stages: [commit]
+        stages: [pre-commit]
         language: system
         entry: uv run mypy
         types: [python]
         require_serial: true
       - id: pydoclint
         name: pydoclint
-        stages: [commit]
+        stages: [pre-commit]
         language: system
         entry: uv run pydoclint src
         types: [python]
@@ -49,7 +49,7 @@ repos:
       - id: update-conda
         name: Update Conda environments
         stages:
-          - commit
+          - pre-commit
         language: system
         entry: "mise run conda:export"
         require_serial: true

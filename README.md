@@ -124,14 +124,14 @@ environment.osx-arm64.yml
 environment.win-64.yml
 ```
 
-Visit the Conda
-[website](https://docs.conda.io/projects/conda/en/stable/user-guide/install/index.html)
-for installation instructions.
+Install Conda via their
+[website](https://docs.conda.io/projects/conda/en/stable/user-guide/install/index.html).
 
 ### Package `plan-a-trip-to-mars`
 
-You will now need to clone the repository and `cd` into it. This is done using [git].
-Alternatively, you can download the repository in a zip-file from GitHub.
+With one of the above tools installed (Uv/Pixi/Conda), you will now need to clone the
+repository and `cd` into it. This is done using [git]. Alternatively, you may download
+the repository in a zip-file from GitHub.
 
 ```bash
 git clone https://github.com/flottflyt/plan-a-trip-to-mars.git

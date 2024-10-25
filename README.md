@@ -18,7 +18,7 @@ to run the following command:
 ```console
 $ plan-a-trip-to-mars
 Hello, World!
-This is plan-a-trip-to-mars, version 0.1.1
+This is plan-a-trip-to-mars, version 1.0.0
 ```
 
 To do this, follow the [installation](#install) instructions below.

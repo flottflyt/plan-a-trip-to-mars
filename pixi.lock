@@ -7983,9 +7983,9 @@ packages:
   timestamp: 1694617398467
 - kind: pypi
   name: plan-a-trip-to-mars
-  version: 0.1.1
+  version: 1.0.0
   path: .
-  sha256: f9c8fe30c114fdd2c052ebf5927dbf24d53392503ba52024524fc07596cd4667
+  sha256: 20297db0ab32a4ecd06cbe93289c32f52fb1fdf58dfd145da6333e91ae333e61
   requires_dist:
   - matplotlib>=3.9.2
   - numpy>=2.1.1

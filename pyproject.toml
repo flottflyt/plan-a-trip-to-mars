@@ -53,7 +53,7 @@ plan-a-trip-to-mars = { path = ".", editable = true }
 hello = { cmd = "plan-a-trip-to-mars" }
 simulation = { cmd = "python ./src/plan_a_trip_to_mars/simulation.py" }
 [tool.pixi.feature.spyder.tasks]
-spyder = { cmd = "spyder" }
+spyder = { cmd = "spyder -p '.'" }
 
 [tool.pixi.feature.spyder.dependencies]
 spyder-kernels = ">=2.5.2,<3"

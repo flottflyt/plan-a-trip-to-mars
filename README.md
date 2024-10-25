@@ -135,7 +135,7 @@ Alternatively, you can download the repository in a zip-file from GitHub.
 
 ```bash
 git clone https://github.com/flottflyt/plan-a-trip-to-mars.git
-cd plan_a_trip_to_mars || exit 1
+cd plan_a_trip_to_mars || exit
 ```
 
 Now you can install the project with either Uv, Pixi or Conda:
@@ -159,19 +159,27 @@ different syntax depending on if you used Uv, Pixi or Conda to install the proje
 uv run plan-a-trip-to-mars
 uv run python ./src/plan_a_trip_to_mars/simulation.py
 # pixi
-pixi run --environment spyder plan-a-trip-to-mars
-pixi run --environment spyder python ./src/plan_a_trip_to_mars/simulation.py
+pixi run -e spyder plan-a-trip-to-mars
+pixi run -e spyder python ./src/plan_a_trip_to_mars/simulation.py
 # conda
 conda run -n name-of-my-env plan-a-trip-to-mars
 conda run -n name-of-my-env python ./src/plan_a_trip_to_mars/simulation.py
 ```
+
+> [!TIP] Spyder
+>
+> You can open the project in Spyder by running the following command in a terminal:
+>
+> ```bash
+> pixi run -e spyder spyder
+> ```
 
 <details>
 <summary>Note on virtual environments</summary>
 
 When working on a python project, the best practice is to work inside a virtual
 environment. This can be confusing to begin with, but the pros massively outweighs the
-cons. Many programs exist the creates and manages virtual environments, and both Pixi
+cons. Many programs exist that creates and manages virtual environments, and both Pixi
 and Uv will do this automatically for you!
 
 Many good alternatives for working with python using virtual environments exist. Pick
@@ -183,18 +191,18 @@ your favourite and learn how to use it.
 
 ### Scenario constants
 
-Five scenario constants exists:
+Five scenario constants exists, defined inside a single object `SimulationConstants`:
 
-- `SIZE`: The length of the sides of the simulation, in metres.
-- `TOT_TIME`: The total time of the simulation, in units of `spi`. That is, changing the
-  `spi` will change the unit of the total time (e.g. seconds to hours). This value
+- `size`: The length of the sides of the simulation, in metres.
+- `total_time`: The total time of the simulation, in units of `spi`. That is, changing
+  the `spi` will change the unit of the total time (e.g. seconds to hours). This value
   decides how many iterations the simulation will use.
-- `FPS`: The frame rate of the animation. After the simulation has been calculated, only
-  every `n`-th iteration is used (for `FPS=n`). Useful if you need high temporal
+- `fps`: The frame rate of the animation. After the simulation has been calculated, only
+  every `n`-th iteration is used (for `fps=n`). Useful if you need high temporal
   resolution, but a faster simulation.
-- `TIME_SCALE`: The clock shown in the animation is divided by `TIME_SCALE`, effectively
+- `time_scale`: The clock shown in the animation is divided by `time_scale`, effectively
   changing the time unit.
-- `UNIT`: Add a time unit to the simulation clock.
+- `unit`: Add a time unit to the simulation clock.
 
 ### `Universe().set_spi()`
 
@@ -206,6 +214,6 @@ careful to also change the timing of events; the time of a rocket's `kick` is no
 specified in hours.
 
 [conda]: https://docs.conda.io/en/latest/index.html
+[git]: https://git-scm.com/
 [pixi]: https://pixi.sh/latest/
 [uv]: https://docs.astral.sh/uv/
-[git]: https://git-scm.com/

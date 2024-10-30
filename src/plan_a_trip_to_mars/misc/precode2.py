@@ -38,7 +38,7 @@ class ReturnZeroError(ZeroDivisionError):
         super().__init__(message)
 
 
-class Vector2D[T]:
+class Vector2D:
     """Implements a two dimensional vector.
 
     :param x: First component for the vector.

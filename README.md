@@ -130,11 +130,17 @@ Install Conda via their
 ### Package `plan-a-trip-to-mars`
 
 With one of the above tools installed (Uv/Pixi/Conda), you will now need to clone the
-repository and `cd` into it. This is done using [git]. Alternatively, you may download
-the repository in a zip-file from GitHub.
+repository and `cd` into it. This is done using [git]. (Alternatively, you may download
+the repository in a zip-file from GitHub.) Open a console, typically an application
+called Terminal is available for this purpose, and run the following commands:
 
 ```bash
+# If you typically have all coding projects or other things you work on in a designated
+# folder called `my-projects-folder`, you should first change directory `cd` to that:
+cd ~/my-projects-folder
+# We then clone the repo. Use the URL of your own repo.
 git clone https://github.com/flottflyt/plan-a-trip-to-mars.git
+# Now, `cd` into the newly cloned directory.
 cd plan_a_trip_to_mars || exit
 ```
 
